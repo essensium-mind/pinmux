@@ -1,0 +1,881 @@
+{
+  "metadata": {
+    "name": "BeagleBone Black",
+    "scope": "linux"
+  },
+  "headers": [
+    {
+      "name": "P9",
+      "position": {
+        "x": 0,
+        "y": 165
+      },
+      "contents": [
+        ["P9_1", "P9_2"],
+        ["P9_3", "P9_4"],
+        ["P9_5", "P9_6"],
+        ["P9_7", "P9_8"],
+        ["P9_9", "P9_10"],
+        ["P9_11", "P9_12"],
+        ["P9_13", "P9_14"],
+        ["P9_15", "P9_16"],
+        ["P9_17", "P9_18"],
+        ["P9_19", "P9_20"],
+        ["P9_21", "P9_22"],
+        ["P9_23", "P9_24"],
+        ["P9_25", "P9_26"],
+        ["P9_27", "P9_28"],
+        ["P9_29", "P9_30"],
+        ["P9_31", "P9_32"],
+        ["P9_33", "P9_34"],
+        ["P9_35", "P9_36"],
+        ["P9_37", "P9_38"],
+        ["P9_39", "P9_40"],
+        ["P9_41", "P9_42"],
+        ["P9_43", "P9_44"],
+        ["P9_45", "P9_46"]
+      ]
+    },
+    {
+      "name": "P8",
+      "position": {
+        "x": 376,
+        "y": 165
+      },
+      "contents": [
+        ["P8_1", "P8_2"],
+        ["P8_3", "P8_4"],
+        ["P8_5", "P8_6"],
+        ["P8_7", "P8_8"],
+        ["P8_9", "P8_10"],
+        ["P8_11", "P8_12"],
+        ["P8_13", "P8_14"],
+        ["P8_15", "P8_16"],
+        ["P8_17", "P8_18"],
+        ["P8_19", "P8_20"],
+        ["P8_21", "P8_22"],
+        ["P8_23", "P8_24"],
+        ["P8_25", "P8_26"],
+        ["P8_27", "P8_28"],
+        ["P8_29", "P8_30"],
+        ["P8_31", "P8_32"],
+        ["P8_33", "P8_34"],
+        ["P8_35", "P8_36"],
+        ["P8_37", "P8_38"],
+        ["P8_39", "P8_40"],
+        ["P8_41", "P8_42"],
+        ["P8_43", "P8_44"],
+        ["P8_45", "P8_46"]
+      ]
+    }
+  ],
+  "pins": {
+    "P9_1": "GND",
+    "P9_2": "GND",
+    "P9_3": {
+      "name": "3V3",
+      "style": "VDD"
+    },
+    "P9_4": {
+      "name": "3V3",
+      "style": "VDD"
+    },
+    "P9_5": {
+      "name": "5V0",
+      "style": "VDD"
+    },
+    "P9_6": {
+      "name": "5V0",
+      "style": "VDD"
+    },
+    "P9_7": {
+      "name": "5V0",
+      "style": "VDD"
+    },
+    "P9_8": {
+      "name": "5V0",
+      "style": "VDD"
+    },
+    "P9_9": "RST",
+    "P9_10": "RST",
+    "P9_11": {
+      "address": "0x870",
+      "gpio": {
+        "port": 0,
+        "number": 30,
+        "mode": 7
+      },
+      "uart": {
+        "function": "RXD",
+        "bus": 4,
+        "mode": 6
+      },
+      "tags": ["gpio", "uart"]
+    },
+    "P9_12": {
+      "address": "0x878",
+      "gpio": {
+        "port": 1,
+        "number": 28,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_13": {
+      "address": "0x874",
+      "gpio": {
+        "port": 0,
+        "number": 31,
+        "mode": 7
+      },
+      "uart": {
+        "function": "TXD",
+        "bus": 4,
+        "mode": 6
+      },
+      "tags": ["gpio", "uart"]
+    },
+    "P9_14": {
+      "address": "0x848",
+      "gpio": {
+        "port": 1,
+        "number": 18,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_15": {
+      "address": "0x840",
+      "gpio": {
+        "port": 1,
+        "number": 16,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_16": {
+      "address": "0x84c",
+      "gpio": {
+        "port": 1,
+        "number": 19,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_17": {
+      "address": "0x95c",
+      "gpio": {
+        "port": 0,
+        "number": 5,
+        "mode": 7
+      },
+      "i2c": {
+        "function": "SCL",
+        "bus": 1,
+        "mode": 2
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 0,
+        "number": 0,
+        "mode": 0
+      },
+      "tags": ["gpio","i2c","spi"]
+    },
+    "P9_18": {
+      "address": "0x958",
+      "i2c": {
+        "function": "SDA",
+        "bus": 1,
+        "mode": 2
+      },
+      "spi": {
+        "function": "D1",
+        "bus": 0,
+        "mode": 0
+      },
+      "gpio": {
+        "port": 0,
+        "number": 4,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","spi"]
+    },
+    "P9_19": {
+      "address": "0x97c",
+      "i2c": {
+        "function": "SCL",
+        "bus": 2,
+        "mode": 3
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 1,
+        "number": 1,
+        "mode": 4
+      },
+      "uart": {
+        "function": "RTS",
+        "bus": 1,
+        "mode": 0
+      },
+      "gpio": {
+        "port": 0,
+        "number": 13,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","spi","uart"]
+    },
+    "P9_20": {
+      "address": "0x978",
+      "i2c": {
+        "function": "SDA",
+        "bus": 2,
+        "mode": 3
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 1,
+        "number": 0,
+        "mode": 4
+      },
+      "uart": {
+        "function": "CTS",
+        "bus": 1,
+        "mode": 0
+      },
+      "gpio": {
+        "port": 0,
+        "number": 12,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","spi","uart"]
+    },
+    "P9_21": {
+      "address": "0x954",
+      "i2c": {
+        "function": "SCL",
+        "bus": 2,
+        "mode": 2
+      },
+      "spi": {
+        "function": "D0",
+        "bus": 0,
+        "mode": 0
+      },
+      "uart": {
+        "function": "TXD",
+        "bus": 2,
+        "mode": 1
+      },
+      "gpio": {
+        "port": 0,
+        "number": 3,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","spi","uart"]
+    },
+    "P9_22": {
+      "address": "0x950",
+      "i2c": {
+        "function": "SDA",
+        "bus": 2,
+        "mode": 2
+      },
+      "spi": {
+        "function": "SCLK",
+        "bus": 0,
+        "mode": 0
+      },
+      "uart": {
+        "function": "RXD",
+        "bus": 2,
+        "mode": 1
+      },
+      "gpio": {
+        "port": 0,
+        "number": 2,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","spi","uart"]
+    },
+    "P9_23": {
+      "address": "0x844",
+      "gpio": {
+        "port": 1,
+        "number": 17,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_24": {
+      "address": "0x984",
+      "uart": {
+        "function": "TXD",
+        "bus": 1,
+        "mode": 0
+      },
+      "i2c": {
+        "function": "SCL",
+        "bus": 1,
+        "mode": 3
+      },
+      "gpio": {
+        "port": 0,
+        "number": 15,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","uart"]
+    },
+    "P9_25": {
+      "address": "0x9ac",
+      "gpio": {
+        "port": 3,
+        "number": 21,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_26": {
+      "address": "0x980",
+      "uart": {
+        "function": "RXD",
+        "bus": 1,
+        "mode": 0
+      },
+      "i2c": {
+        "function": "SDA",
+        "bus": 1,
+        "mode": 3
+      },
+      "gpio": {
+        "port": 0,
+        "number": 14,
+        "mode": 7
+      },
+      "tags": ["gpio","i2c","uart"]
+    },
+    "P9_27": {
+      "address": "0x9a4",
+      "gpio": {
+        "port": 3,
+        "number": 19,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_28": {
+      "address": "0x99c",
+      "gpio": {
+        "port": 3,
+        "number": 17,
+        "mode": 7
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 1,
+        "number": 0,
+        "mode": 3
+      },
+      "tags": ["gpio","spi"]
+    },
+    "P9_29": {
+      "address": "0x994",
+      "spi": {
+        "function": "D0",
+        "bus": 1,
+        "mode": 3
+      },
+      "gpio": {
+        "port": 3,
+        "number": 15,
+        "mode": 7
+      },
+      "tags": ["gpio","spi"]
+    },
+    "P9_30": {
+      "address": "0x998",
+      "spi": {
+        "function": "D1",
+        "bus": 1,
+        "mode": 3
+      },
+      "gpio": {
+        "port": 3,
+        "number": 16,
+        "mode": 7
+      },
+      "tags": ["gpio","spi"]
+    },
+    "P9_31": {
+      "address": "0x990",
+      "spi": {
+        "function": "SCLK",
+        "bus": 1,
+        "mode": 3
+      },
+      "gpio": {
+        "port": 3,
+        "number": 14,
+        "mode": 7
+      },
+      "tags": ["gpio","spi"]
+    },
+    "P9_32": {
+      "name": "VADC",
+      "style": "VDD"
+    },
+    "P9_33": {
+      "name": "AIN4",
+      "style": "BLK"
+    },
+    "P9_34": {
+      "name": "AGND",
+      "style": "GND"
+    },
+    "P9_35": {
+      "name": "AIN6",
+      "style": "BLK"
+    },
+    "P9_36": {
+      "name": "AIN5",
+      "style": "BLK"
+    },
+    "P9_37": {
+      "name": "AIN2",
+      "style": "BLK"
+    },
+    "P9_38": {
+      "name": "AIN3",
+      "style": "BLK"
+    },
+    "P9_39": {
+      "name": "AIN0",
+      "style": "BLK"
+    },
+    "P9_40": {
+      "name": "AIN1",
+      "style": "BLK"
+    },
+    "P9_41": {
+      "address": "0x9a8",
+      "gpio": {
+        "port": 3,
+        "number": 20,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_42": {
+      "address": "0x9a0",
+      "gpio": {
+        "port": 3,
+        "number": 18,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P9_43": "GND",
+    "P9_44": "GND",
+    "P9_45": "GND",
+    "P9_46": "GND",
+    "P8_1": "GND",
+    "P8_2": "GND",
+    "P8_3": {
+      "address": "0x818",
+      "gpio": {
+        "port": 1,
+        "number": 6,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_4": {
+      "address": "0x81c",
+      "gpio": {
+        "port": 1,
+        "number": 7,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_5": {
+      "address": "0x808",
+      "gpio": {
+        "port": 1,
+        "number": 2,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_6": {
+      "address": "0x80c",
+      "gpio": {
+        "port": 1,
+        "number": 3,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_7": {
+      "address": "0x890",
+      "gpio": {
+        "port": 2,
+        "number": 2,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_8": {
+      "address": "0x894",
+      "gpio": {
+        "port": 2,
+        "number": 3,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_9": {
+      "address": "0x89c",
+      "gpio": {
+        "port": 2,
+        "number": 5,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_10": {
+      "address": "0x898",
+      "gpio": {
+        "port": 2,
+        "number": 4,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_11": {
+      "address": "0x834",
+      "gpio": {
+        "port": 1,
+        "number": 13,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_12": {
+      "address": "0x830",
+      "gpio": {
+        "port": 1,
+        "number": 12,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_13": {
+      "address": "0x824",
+      "gpio": {
+        "port": 0,
+        "number": 23,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_14": {
+      "address": "0x828",
+      "gpio": {
+        "port": 0,
+        "number": 26,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_15": {
+      "address": "0x83c",
+      "gpio": {
+        "port": 1,
+        "number": 15,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_16": {
+      "address": "0x838",
+      "gpio": {
+        "port": 1,
+        "number": 14,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_17": {
+      "address": "0x82c",
+      "gpio": {
+        "port": 0,
+        "number": 27,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_18": {
+      "address": "0x88c",
+      "gpio": {
+        "port": 2,
+        "number": 1,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_19": {
+      "address": "0x820",
+      "gpio": {
+        "port": 0,
+        "number": 22,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_20": {
+      "address": "0x884",
+      "gpio": {
+        "port": 1,
+        "number": 31,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_21": {
+      "address": "0x880",
+      "gpio": {
+        "port": 1,
+        "number": 30,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_22": {
+      "address": "0x814",
+      "gpio": {
+        "port": 1,
+        "number": 5,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_23": {
+      "address": "0x810",
+      "gpio": {
+        "port": 1,
+        "number": 4,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_24": {
+      "address": "0x804",
+      "gpio": {
+        "port": 1,
+        "number": 1,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_25": {
+      "address": "0x800",
+      "gpio": {
+        "port": 1,
+        "number": 0,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_26": {
+      "address": "0x87c",
+      "gpio": {
+        "port": 1,
+        "number": 29,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_27": {
+      "address": "0x8e0",
+      "gpio": {
+        "port": 2,
+        "number": 22,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_28": {
+      "address": "0x8e8",
+      "gpio": {
+        "port": 2,
+        "number": 24,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_29": {
+      "address": "0x8e4",
+      "gpio": {
+        "port": 2,
+        "number": 23,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_30": {
+      "address": "0x8ec",
+      "gpio": {
+        "port": 2,
+        "number": 25,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_31": {
+      "address": "0x8d8",
+      "gpio": {
+        "port": 0,
+        "number": 10,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_32": {
+      "address": "0x8dc",
+      "gpio": {
+        "port": 0,
+        "number": 11,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_33": {
+      "address": "0x8d4",
+      "gpio": {
+        "port": 0,
+        "number": 9,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_34": {
+      "address": "0x8cc",
+      "gpio": {
+        "port": 2,
+        "number": 17,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_35": {
+      "address": "0x8d0",
+      "gpio": {
+        "port": 0,
+        "number": 8,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_36": {
+      "address": "0x8c8",
+      "gpio": {
+        "port": 2,
+        "number": 16,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_37": {
+      "address": "0x8c0",
+      "gpio": {
+        "port": 2,
+        "number": 14,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_38": {
+      "address": "0x8c4",
+      "gpio": {
+        "port": 2,
+        "number": 15,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_39": {
+      "address": "0x8b8",
+      "gpio": {
+        "port": 2,
+        "number": 12,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_40": {
+      "address": "0x8bc",
+      "gpio": {
+        "port": 2,
+        "number": 13,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_41": {
+      "address": "0x8b0",
+      "gpio": {
+        "port": 2,
+        "number": 10,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_42": {
+      "address": "0x8b4",
+      "gpio": {
+        "port": 2,
+        "number": 11,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_43": {
+      "address": "0x8a8",
+      "gpio": {
+        "port": 2,
+        "number": 8,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_44": {
+      "address": "0x8ac",
+      "gpio": {
+        "port": 2,
+        "number": 9,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_45": {
+      "address": "0x8a0",
+      "gpio": {
+        "port": 2,
+        "number": 6,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    },
+    "P8_46": {
+      "address": "0x8a4",
+      "gpio": {
+        "port": 2,
+        "number": 7,
+        "mode": 7
+      },
+      "tags": ["gpio"]
+    }
+  }
+}
