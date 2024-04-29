@@ -56,7 +56,7 @@ const Legend = ({ align, id, desc }) => (
 );
 
 function Pin({ pin, shown }) {
-  const FemalePin = ({ id, justify }) => {
+  const UnwrappedPin = ({ id, justify }) => {
     const desc = (align) => (bone.pins[id] ?
       (<Legend id={id} align={align} desc={bone.pins[id]}/>) : (
       <td>{id}</td>
@@ -76,16 +76,16 @@ function Pin({ pin, shown }) {
     const last = pin.slice(-1)
     return (
       <tr className="pin-row">
-        <FemalePin shown={shown} key={first} id={first} justify="left" />
+        <UnwrappedPin shown={shown} key={first} id={first} justify="left" />
         {pins ? (
-            pins.map(id => <FemalePin shown={shown} key={id} id={id} />)
+            pins.map(id => <UnwrappedPin shown={shown} key={id} id={id} />)
         ) : null}
-        <FemalePin shown={shown} key={last} id={last} justify="right" />
+        <UnwrappedPin shown={shown} key={last} id={last} justify="right" />
       </tr>
     )
   } else {
     return (
-      <FemalePin key={pin} id={pin} justify="left" />
+      <UnwrappedPin key={pin} id={pin} justify="left" />
     );
   }
 }
