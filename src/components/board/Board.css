@@ -1,0 +1,136 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.wrapper img {
+    height: 697px;
+}
+
+.pin-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.pin-overlay .header-connector {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+ 
+
+.pin-overlay .pin-header-title span {
+  padding: 8px;
+  background-color: AliceBlue;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.pin-overlay table, .pin-overlay td { 
+  white-space: nowrap;
+  border-spacing: 0;
+  border-collapse: collapse;
+  padding: 0;
+}
+
+.pin-overlay td {
+  font-size: small;
+  user-select: none;
+}
+
+.pin-overlay td .pin-desc {
+  cursor: pointer;
+}
+
+h3 {
+  text-align: center;
+}
+
+.pin-row {
+  flex-direction: row;
+  align-items: stretch;
+  font-size: x-small;
+}
+
+.female-pin {
+  aspect-ratio: 1/1;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-width: 5px;
+  border-color: black;
+  border-style: ridge;
+  background-color: grey;
+}
+
+.pin-desc {
+  color: black;
+  background-color: GhostWhite;
+  padding: 0px 2px;
+  margin: 2px;
+  border-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+}
+
+.GND {
+  color: AliceBlue;
+  background-color: DarkSlateGray;
+}
+
+.VDD {
+  color: black;
+  background-color: IndianRed;
+}
+
+.RST {
+  color: black;
+  background-color: GainsBoro;
+}
+
+.BLK {
+  color: DarkSlateGray;
+  background-color: white;
+}
+
+.gpio-selected {
+  border-color: red;
+  background-color: lightgrey;
+}
+
+.uart {
+  background-color: SandyBrown;
+}
+
+.uart-selected {
+  border-color: red;
+  background-color: Salmon;
+}
+
+.spi {
+  background-color: SkyBlue;
+}
+
+.spi-selected {
+  border-color: red;
+  background-color: SteelBlue;
+}
+
+.i2c {
+  background-color: MediumSeaGreen;
+}
+
+.i2c-selected {
+  border-color: red;
+  background-color: SeaGreen;
+}
