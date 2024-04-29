@@ -1,6 +1,5 @@
 import React, {useState, useContext, useRef, useEffect} from 'react';
 import './App.css';
-import bbb from './assets/images/bbb.png';
 import bone from './am335-boneblack.json';
 import { useWindowDimensions } from './hooks/windows.js';
 
@@ -273,7 +272,7 @@ function App() {
           </li>
         </div>
         <div className="wrapper">
-          <img src={bbb} alt={""}/>
+          <img src={require(`./assets/images/${bone.metadata.image}`)} alt={bone.metadata.name}/>
           <div className="pin-overlay">
             {bone.headers.map(header =>
               <Header 
