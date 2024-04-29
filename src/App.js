@@ -2,29 +2,7 @@ import React, {useState, useContext, useRef, useEffect} from 'react';
 import './App.css';
 import bbb from './assets/images/bbb.png';
 import bone from './am335-boneblack.json';
-
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
-}
-
-function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return windowDimensions;
-}
+import { useWindowDimensions } from './hooks/windows.js';
 
 const SelectedPinContext = React.createContext({
   selectedPins: {},
