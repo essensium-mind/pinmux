@@ -22,7 +22,7 @@ const ClickableLegend = ({id, type, desc}) => {
     }
   };
 
-  const className = `pin-desc ${type}${selected ? '-selected' : ''}`
+  const className = `pin-desc pin-desc-clickable ${type}${selected ? '-selected' : ''}`
   const name = type === 'gpio' ? 
     `${type.toUpperCase()}${desc.port}_${desc.number}` :
     `${type.toUpperCase()}${desc.bus}_${desc.function}${desc.number !== undefined ? desc.number : ''}`

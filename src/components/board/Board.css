@@ -51,6 +51,11 @@
   cursor: pointer;
 }
 
+.pin-overlay td .pin-desc-clickable:hover {
+  border-style: double;
+  color: DarkSlateGray;
+}
+
 h3 {
   text-align: center;
 }
