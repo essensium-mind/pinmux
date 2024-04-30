@@ -49,7 +49,9 @@ export function DeviceTreeOutput() {
   }
 
   return (
-    <textarea className="device-tree" readOnly value={`&am33xx_pinmux {\n${pinmux('i2c')}${pinmux('spi')}${pinmux('uart')}${pinmux('gpio', 'port')}};\n`}/>
+    <div className="device-tree">
+      <textarea className="device-tree" readOnly value={`&am33xx_pinmux {\n${pinmux('i2c')}${pinmux('spi')}${pinmux('uart')}${pinmux('gpio', 'port')}};\n`}/>
+    </div>
   )
 }
 

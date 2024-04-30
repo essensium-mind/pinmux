@@ -32,9 +32,7 @@ function App() {
     <SelectedPinProvider>
        <Header/>
        <Board/>
-      <div className="device-tree">
-        <DeviceTreeOutput/>
-      </div>
+       <DeviceTreeOutput/>
     </SelectedPinProvider>
   );
 }
