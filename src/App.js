@@ -14,22 +14,26 @@ function ClearButton() {
   );
 }
 
+function Header() {
+  return (
+    <div className="header">
+      <li>
+        <ul>PinMux</ul>
+        <ul>
+          <ClearButton/>
+        </ul>
+      </li>
+    </div>
+  );
+}
+
 function App() {
   return (
     <SelectedPinProvider>
-      <div>
-        <div className="header">
-          <li>
-            <ul>PinMux</ul>
-            <ul>
-              <ClearButton/>
-            </ul>
-          </li>
-        </div>
-        <Board/>
-        <div className="device-tree">
-          <DeviceTreeOutput/>
-        </div>
+       <Header/>
+       <Board/>
+      <div className="device-tree">
+        <DeviceTreeOutput/>
       </div>
     </SelectedPinProvider>
   );
