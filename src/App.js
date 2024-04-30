@@ -16,14 +16,14 @@ function ClearButton() {
 
 function Header() {
   return (
-    <div className="header">
+    <section className="header">
       <li>
         <ul>PinMux</ul>
         <ul>
           <ClearButton/>
         </ul>
       </li>
-    </div>
+    </section>
   );
 }
 
@@ -31,8 +31,10 @@ function App() {
   return (
     <SelectedPinProvider>
        <Header/>
-       <Board/>
-       <DeviceTreeOutput/>
+       <section className="body">
+        <Board/>
+        <DeviceTreeOutput/>
+       </section>
     </SelectedPinProvider>
   );
 }

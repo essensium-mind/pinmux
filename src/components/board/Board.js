@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useSelectedPinContext } from '../../contexts/pins.js';
-import { useWindowDimensions } from '../../hooks/windows.js';
+// import { useWindowDimensions } from '../../hooks/windows.js';
+import { useResizeObserver } from '../../hooks/resize.js';
 import bone from '../../am335-boneblack.json';
 import './Board.css';
 
@@ -85,34 +86,18 @@ function Pin({ pin, shown }) {
   }
 }
 
-function Header({ header, shown, setShown }) {
-  const { width: windowWidth } = useWindowDimensions();
-  const [width, setWidth] = useState();
-
-  const tableRef = useRef(null);
-
-  useEffect(() => {
-    if (!tableRef.current) {
-      return;
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      if(tableRef.current.offsetWidth !== width) {
-        setWidth(tableRef.current.offsetWidth); 
-      }
-    });
-    
-    resizeObserver.observe(tableRef.current);
-
-    return function cleanup() {
-      resizeObserver.disconnect();
-    }
-  }, [width]);
+function Header({ containerWidth, header, shown, setShown }) {
+  const headerRef = useRef(null);
+  const { width } = useResizeObserver(headerRef);
 
   return (
-    <div style={{top: header.position.y - 58, left: ((windowWidth - width) / 2) - 192 + header.position.x }} className="header-connector">
+    <div
+      ref={headerRef}
+      style={{top: header.position.y - 58, left: ((containerWidth - width) / 2) - 192 + header.position.x }}
+      className="header-connector"
+    >
       <h3 className="pin-header-title"><span onClick={setShown}>{header.name}</span></h3>
-      <table ref={tableRef}>
+      <table >
         <tbody>
           {header.contents.map((pin, index) => (
             <Pin shown={shown} key={`pin-header-line-${header.name}-${index}`} pin={pin} />
@@ -126,18 +111,22 @@ function Header({ header, shown, setShown }) {
 export function Board () {
   const [shownPinHeader, setShownPinHeader] = useState(bone.headers[0].name);
 
+  const containerRef = useRef(null);
+  const { width } = useResizeObserver(containerRef);
+
   return (
-    <div className="wrapper">
+    <div className="board-container" style={{ minWidth: width }} ref={containerRef}>
         <img src={require(`../../assets/images/${bone.metadata.image}`)} alt={bone.metadata.name}/>
         <div className="pin-overlay">
-        {bone.headers.map(header =>
+          {bone.headers.map(header =>
             <Header 
+                containerWidth={width}
                 shown={header.name === shownPinHeader} 
                 setShown={() => setShownPinHeader(header.name)}
                 key={`pin-header-${header.name}`} 
                 header={header}
             />
-        )}
+          )}
         </div>
     </div>
   );

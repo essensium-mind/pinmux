@@ -1,8 +1,9 @@
 .header {
   display: flex;
+  width: 100%;
 }
 
-ul {
+.header ul {
   list-style-type: none;
   display: inline-block;
   margin: 10px;
@@ -10,6 +11,13 @@ ul {
   overflow: hidden;
 }
 
-li {
+.header li {
   float: left;
+}
+
+.body {
+  display: flex;
+  width: 100%;
+  flex-flow: row wrap;
+  justify-content: space-around;
 }
