@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useSelectedPinContext } from '../../contexts/pins.js';
-// import { useWindowDimensions } from '../../hooks/windows.js';
+import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
 import { useResizeObserver } from '../../hooks/resize.js';
 import bone from '../../am335-boneblack.json';
 import './Board.css';
@@ -52,7 +52,7 @@ const Legend = ({ align, id, desc }) => (
 );
 
 function Pin({ pin, shown }) {
-  const UnwrappedPin = ({ id, justify }) => {
+  const UnwrappedPin = ({ shown, id, justify }) => {
     const desc = (align) => (bone.pins[id] ?
       (<Legend id={id} align={align} desc={bone.pins[id]}/>) : (
       <td>{id}</td>
@@ -69,7 +69,7 @@ function Pin({ pin, shown }) {
 
   if (Array.isArray(pin)) {
     const [first, ...pins] = pin.slice(0,-1);
-    const last = pin.slice(-1)
+    const last = pin.slice(-1);
     return (
       <tr className="pin-row">
         <UnwrappedPin shown={shown} key={first} id={first} justify="left" />
@@ -82,27 +82,33 @@ function Pin({ pin, shown }) {
   } else {
     return (
       <tr className="pin-row">
-        <UnwrappedPin key={pin} id={pin} justify="left" />
+        <UnwrappedPin key={pin} shown={shown} id={pin} justify="left" />
       </tr>
     );
   }
 }
 
-function Header({ containerWidth, header, shown, setShown }) {
+function Header({ containerWidth, header }) {
   const headerRef = useRef(null);
   const { width } = useResizeObserver(headerRef);
+  const { select, selectedHeader } = useSelectedHeaderContext()
+  const shown = selectedHeader === header.name;
 
   return (
     <div
       ref={headerRef}
-      style={{top: header.position.y - 58, left: ((containerWidth - width) / 2) - 192 + header.position.x }}
+      style={{
+        top: header.position.y - 58,
+        left: ((containerWidth - width) / 2) - 192 + header.position.x,
+        zIndex: shown ? 10 : 5
+      }}
       className="header-connector"
     >
-      <h3 className="pin-header-title"><span onClick={setShown}>{header.name}</span></h3>
+      <h3 className="pin-header-title"><span onClick={() => select(header.name)}>{header.name}</span></h3>
       <table>
         <tbody>
           {header.contents.map((pin, index) => (
-            <Pin shown={shown} key={`pin-header-line-${header.name}-${index}`} pin={pin} />
+            <Pin key={`pin-header-line-${header.name}-${index}`} shown={shown} pin={pin} />
           ))}
         </tbody>
       </table>
@@ -111,26 +117,24 @@ function Header({ containerWidth, header, shown, setShown }) {
 }
 
 export function Board () {
-  const [shownPinHeader, setShownPinHeader] = useState(bone.headers[0].name);
-
   const containerRef = useRef(null);
   const { width } = useResizeObserver(containerRef);
 
   return (
-    <div className="board-container" style={{ minWidth: width }} ref={containerRef}>
+    <SelectedHeaderProvider headerInit={bone.headers.length ? bone.headers[0].name : ''}>
+      <div className="board-container" style={{ minWidth: width }} ref={containerRef}>
         <img src={require(`../../assets/images/${bone.metadata.image}`)} alt={bone.metadata.name}/>
         <div className="pin-overlay">
           {bone.headers.map(header =>
             <Header 
                 containerWidth={width}
-                shown={header.name === shownPinHeader} 
-                setShown={() => setShownPinHeader(header.name)}
                 key={`pin-header-${header.name}`} 
                 header={header}
             />
           )}
         </div>
-    </div>
+      </div>
+    </SelectedHeaderProvider>
   );
 }
 
