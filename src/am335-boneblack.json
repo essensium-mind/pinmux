@@ -7,6 +7,7 @@
   "headers": [
     {
       "name": "P9",
+      "style": "female",
       "position": {
         "x": 0,
         "y": 165
@@ -39,6 +40,7 @@
     },
     {
       "name": "P8",
+      "style": "female",
       "position": {
         "x": 376,
         "y": 165
@@ -68,7 +70,24 @@
         ["P8_43", "P8_44"],
         ["P8_45", "P8_46"]
       ]
+    },
+    {
+      "name": "J1",
+      "style": "male",
+      "position": {
+        "x": 47,
+        "y":348 
+      },
+      "contents": [
+        "J1_1",
+        "J1_2",
+        "J1_3",
+        "J1_4",
+        "J1_5",
+        "J1_6"
+      ]
     }
+
   ],
   "pins": {
     "P9_1": "GND",
@@ -877,6 +896,47 @@
         "mode": 7
       },
       "tags": ["gpio"]
+    },
+    "J1_1": "GND",
+    "J1_2": {
+      "address": "0x968",
+      "uart": {
+        "function": "CTS",
+        "bus": 0,
+        "mode": 0
+      },
+      "tags": ["uart"]
+    },
+    "J1_3": {
+      "name": "3V3",
+      "style": "VDD"
+    },
+    "J1_4": {
+      "address": "0x974",
+      "uart": {
+        "function": "TXD",
+        "bus": 0,
+        "mode": 0
+      },
+      "tags": ["uart"]
+    },
+    "J1_5": {
+      "address": "0x970",
+      "uart": {
+        "function": "RXD",
+        "bus": 0,
+        "mode": 0
+      },
+      "tags": ["uart"]
+    },
+    "J1_6": {
+      "address": "0x96c",
+      "uart": {
+        "function": "RTS",
+        "bus": 0,
+        "mode": 0
+      },
+      "tags": ["uart"]
     }
   }
 }
