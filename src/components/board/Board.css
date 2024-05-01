@@ -25,7 +25,6 @@
   left: 0;
 }
  
-
 .pin-overlay .pin-header-title span {
   padding: 8px;
   background-color: AliceBlue;
@@ -67,14 +66,15 @@ h3 {
 }
 
 .female-pin {
+  z-index: 5;
   aspect-ratio: 1/1;
   display: inline-block;
-  height: 10px;
-  width: 10px;
-  border-width: 5px;
-  border-color: black;
+  height: 6px;
+  width: 6px;
+  border-width: 7px;
   border-style: ridge;
-  background-color: grey;
+  border-color: DimGrey;
+  background-color: Grey;
 }
 
 .pin-desc {
