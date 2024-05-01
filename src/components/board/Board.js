@@ -81,7 +81,9 @@ function Pin({ pin, shown }) {
     )
   } else {
     return (
-      <UnwrappedPin key={pin} id={pin} justify="left" />
+      <tr className="pin-row">
+        <UnwrappedPin key={pin} id={pin} justify="left" />
+      </tr>
     );
   }
 }
@@ -97,7 +99,7 @@ function Header({ containerWidth, header, shown, setShown }) {
       className="header-connector"
     >
       <h3 className="pin-header-title"><span onClick={setShown}>{header.name}</span></h3>
-      <table >
+      <table>
         <tbody>
           {header.contents.map((pin, index) => (
             <Pin shown={shown} key={`pin-header-line-${header.name}-${index}`} pin={pin} />
