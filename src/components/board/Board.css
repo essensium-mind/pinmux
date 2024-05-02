@@ -25,13 +25,26 @@
   left: 0;
 }
  
+.pin-overlay .pin-header-title span:hover {
+  border-style: double;
+  color: DarkSlateGray;
+}
+
 .pin-overlay .pin-header-title span {
   padding: 8px;
-  background-color: AliceBlue;
   border: 2px solid #ccc;
   border-radius: 4px;
   user-select: none;
   cursor: pointer;
+}
+
+.pin-overlay .pin-header-title-selected span {
+  background-color: AliceBlue;
+}
+
+.pin-overlay .pin-header-title-hidden span {
+  border-color: DarkGrey;
+  background-color: DimGrey;
 }
 
 .pin-overlay table, .pin-overlay td { 

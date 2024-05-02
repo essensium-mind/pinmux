@@ -34,8 +34,8 @@ const ClickableLegend = ({id, type, desc}) => {
   );
 }
 
-const Legend = ({ align, id, desc }) => (
-  <td style={{ textAlign: align }}>
+const Legend = ({ align, id, desc, shown }) => (
+  <td style={{ textAlign: align, visibility: shown ? 'visible' : 'hidden' }}>
     {typeof desc === 'string' ? (
       <span className={`pin-desc ${desc}`}>{desc}</span>
     ) : desc.style ? (
@@ -53,16 +53,15 @@ const Legend = ({ align, id, desc }) => (
 
 function Pin({ pin, shown }) {
   const UnwrappedPin = ({ shown, id, justify }) => {
-    const desc = (align) => (bone.pins[id] ?
-      (<Legend id={id} align={align} desc={bone.pins[id]}/>) : (
-      <td>{id}</td>
-    ));
+    const desc = (align) => (bone.pins[id] ? (
+      <Legend shown={shown} id={id} align={align} desc={bone.pins[id]}/>) : (
+      <td>{id}</td>));
 
     return (
       <>
-        { justify === "left" && shown ? desc('right') : null }
+        { justify === "left" ? desc('right') : null }
         <td className="female-pin"/>
-        { justify === "right" && shown ? desc('left') : null }
+        { justify === "right" ? desc('left') : null }
       </>
     );
   };
@@ -104,7 +103,7 @@ function Header({ containerWidth, header }) {
       }}
       className="header-connector"
     >
-      <h3 className="pin-header-title"><span onClick={() => select(header.name)}>{header.name}</span></h3>
+      <h3 className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}><span onClick={() => select(header.name)}>{header.name}</span></h3>
       <table>
         <tbody>
           {header.contents.map((pin, index) => (
