@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
-import { useResizeObserver } from '../../hooks/resize.js';
+import { useResizeObserver, useTableSizeObserver } from '../../hooks/resize.js';
 import bone from '../../am335-boneblack.json';
 import './Board.css';
 
@@ -87,25 +87,52 @@ function Pin({ pin, shown }) {
   }
 }
 
-function Header({ containerWidth, header }) {
-  const headerRef = useRef(null);
-  const { width } = useResizeObserver(headerRef);
+function Header({ containerWidth, header, imageSize }) {
   const { select, selectedHeader } = useSelectedHeaderContext()
   const shown = selectedHeader === header.name;
 
+  const headerRef = useRef(null);
+  const tableRef = useRef(null);
+
+  const { height: headerHeight } = useResizeObserver(headerRef);
+  const { size, columnSize } = useTableSizeObserver(tableRef);
+
+  let xOffset;
+  if (size.column === 0 || size.row === 0) {
+    xOffset = 0;
+  } else {
+    xOffset = header.justify === 'vertical' ?
+      (imageSize.imageLeft + header.position.x) :
+      (imageSize.imageLeft + header.position.x - columnSize[0])
+  }
+
   return (
     <div
-      ref={headerRef}
       style={{
-        top: header.position.y - 58,
-        left: ((containerWidth - width) / 2) - 192 + header.position.x,
         zIndex: shown ? 10 : 5
       }}
       className="header-connector"
     >
-      <h3 className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}><span onClick={() => select(header.name)}>{header.name}</span></h3>
-      <table>
-        <tbody>
+      <div 
+        style={{
+          position: 'absolute',
+          top: imageSize.imageTop + header.position.y - headerHeight - 18,
+          left: imageSize.imageLeft + header.position.x,
+        }} 
+        ref={headerRef}
+        className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}
+      >
+        <span onClick={() => select(header.name)}>{header.name}</span>
+      </div>
+      <table
+        style={{
+          position: 'absolute',
+          top: imageSize.imageTop + header.position.y,
+          left: xOffset,
+          zIndex: shown ? 10 : 5
+        }}
+      >
+        <tbody ref={tableRef}>
           {header.contents.map((pin, index) => (
             <Pin key={`pin-header-line-${header.name}-${index}`} shown={shown} pin={pin} />
           ))}
@@ -117,7 +144,16 @@ function Header({ containerWidth, header }) {
 
 export function Board () {
   const containerRef = useRef(null);
-  const { width } = useResizeObserver(containerRef);
+  const { width, height } = useResizeObserver(containerRef);
+  const { imgWidth, imgHeight } = {
+    imgWidth: 421,
+    imgHeight: 697,
+  }; // TODO Get this information dynamically
+
+  const { imageTop, imageLeft } = { 
+    imageLeft: (width - imgWidth) / 2,
+    imageTop: (height - imgHeight) / 2,
+  }
 
   return (
     <SelectedHeaderProvider headerInit={bone.headers.length ? bone.headers[0].name : ''}>
@@ -126,6 +162,7 @@ export function Board () {
         <div className="pin-overlay">
           {bone.headers.map(header =>
             <Header 
+                imageSize={{ imageTop: imageTop, imageLeft: imageLeft }}
                 containerWidth={width}
                 key={`pin-header-${header.name}`} 
                 header={header}
