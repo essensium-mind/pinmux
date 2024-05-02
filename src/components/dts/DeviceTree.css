@@ -5,6 +5,7 @@
 }
 
 .device-tree textarea {
+  tab-size: 3;
   min-height: 200px;
   margin: 10px 40px;
   display: block;
