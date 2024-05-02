@@ -1,16 +1,14 @@
 .device-tree {
   display: flex;
   flex: 2;
-  width: 100%;
-  min-width: 400px;
+  min-width: 300px;
 }
 
 .device-tree textarea {
+  min-height: 200px;
+  margin: 10px 40px;
   display: block;
-  margin: 10px;
-  height: 200px;
-  margin-left: auto;
-  margin-right: auto;
+  height: 100%;
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 4px;
