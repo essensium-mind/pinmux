@@ -1,10 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@100..800&display=swap');
+
 .header {
+  font-family: "Martian Mono", monospace;
+  color: white;
+  background-color: #1f1fa3;
   display: flex;
   width: 100%;
+  margin-bottom: 40px;
+  height: 100%;
 }
 
 .header ul {
-  list-style-type: none;
+  vertical-align: middle;
   display: inline-block;
   margin: 10px;
   padding: 0;
@@ -12,7 +19,37 @@
 }
 
 .header li {
-  float: left;
+  list-style-type: none;
+}
+
+.header .brand {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+}
+
+.header .brand a {
+  text-decoration: none;
+  color: white;
+  :hover {
+    color: orange;
+  }
+}
+
+.reload-button {
+  background-color: transparent;
+  padding: 8px;
+  border: 2px solid white;
+  border-radius: 4px;
+  user-select: none;
+  cursor: pointer;
+
+  color: white;
+}
+
+.reload-button:hover {
+  color: orange;
+  border-color: orange;
 }
 
 .body {
