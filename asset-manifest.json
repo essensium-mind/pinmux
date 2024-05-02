@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/pinmux/static/css/main.7472b6a1.css",
+    "main.js": "/pinmux/static/js/main.23212e92.js",
+    "static/js/453.1918044f.chunk.js": "/pinmux/static/js/453.1918044f.chunk.js",
+    "static/media/bbb.png": "/pinmux/static/media/bbb.dd7fd517a8a97a757e74.png",
+    "static/media/mind_logo.svg": "/pinmux/static/media/mind_logo.344ca2ed4cb455880637a910a8233589.svg",
+    "index.html": "/pinmux/index.html",
+    "main.7472b6a1.css.map": "/pinmux/static/css/main.7472b6a1.css.map",
+    "main.23212e92.js.map": "/pinmux/static/js/main.23212e92.js.map",
+    "453.1918044f.chunk.js.map": "/pinmux/static/js/453.1918044f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7472b6a1.css",
+    "static/js/main.23212e92.js"
+  ]
+}
