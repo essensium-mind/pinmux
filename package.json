@@ -1,6 +1,6 @@
 {
-  "name": "pinout",
-  "homepage": "https://tperale.github.io/pinmux",
+  "name": "pinmux",
+  "homepage": "https://pinmux.mind.be",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
