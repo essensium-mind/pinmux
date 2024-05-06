@@ -87,7 +87,7 @@ function Pin({ pin, shown }) {
   }
 }
 
-function Header({ containerWidth, header, imageSize }) {
+function Header({ header, imageSize }) {
   const { select, selectedHeader } = useSelectedHeaderContext()
   const shown = selectedHeader === header.name;
 
@@ -144,26 +144,25 @@ function Header({ containerWidth, header, imageSize }) {
 
 export function Board () {
   const containerRef = useRef(null);
-  const { width, height } = useResizeObserver(containerRef);
-  const { imgWidth, imgHeight } = {
-    imgWidth: 421,
-    imgHeight: 697,
-  }; // TODO Get this information dynamically
+  const imgRef = useRef(null);
+  const { width: containerWidth, height: containerHeight } = useResizeObserver(containerRef);
+  const { width: imgWidth, height: imgHeight } = useResizeObserver(imgRef);
 
+  // Offset relative to the container the image is wrapped in.
+  // The image is centered inside that container.
   const { imageTop, imageLeft } = { 
-    imageLeft: (width - imgWidth) / 2,
-    imageTop: (height - imgHeight) / 2,
+    imageLeft: (containerWidth - imgWidth) / 2,
+    imageTop: (containerHeight - imgHeight) / 2,
   }
 
   return (
     <SelectedHeaderProvider headerInit={bone.headers.length ? bone.headers[0].name : ''}>
-      <div className="board-container" style={{ minWidth: width }} ref={containerRef}>
-        <img src={require(`../../assets/images/${bone.metadata.image}`)} alt={bone.metadata.name}/>
+      <div className="board-container" style={{ minWidth: containerWidth }} ref={containerRef}>
+        <img ref={imgRef} src={require(`../../assets/images/${bone.metadata.image}`)} alt={bone.metadata.name}/>
         <div className="pin-overlay">
           {bone.headers.map(header =>
             <Header 
-                imageSize={{ imageTop: imageTop, imageLeft: imageLeft }}
-                containerWidth={width}
+                imageSize={{ imageTop, imageLeft }}
                 key={`pin-header-${header.name}`} 
                 header={header}
             />
@@ -173,4 +172,3 @@ export function Board () {
     </SelectedHeaderProvider>
   );
 }
-
