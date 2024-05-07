@@ -8,9 +8,10 @@
     {
       "name": "P9",
       "style": "female",
+      "pitch": 23.17,
       "position": {
         "x": 0,
-        "y": 165
+        "y": 190
       },
       "contents": [
         ["P9_1", "P9_2"],
@@ -41,9 +42,10 @@
     {
       "name": "P8",
       "style": "female",
+      "pitch": 23.17,
       "position": {
-        "x": 376,
-        "y": 165
+        "x": 435,
+        "y": 185
       },
       "contents": [
         ["P8_1", "P8_2"],
@@ -74,9 +76,10 @@
     {
       "name": "J1",
       "style": "male",
+      "pitch": 23.17,
       "position": {
-        "x": 47,
-        "y":348 
+        "x": 55,
+        "y": 401
       },
       "contents": [
         "J1_1",
