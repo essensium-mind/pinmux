@@ -3,6 +3,7 @@ import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
 import { useResizeObserver, useTableSizeObserver } from '../../hooks/resize.js';
+import { useWindowDimensions } from '../../hooks/windows.js';
 import './Board.css';
 
 const isSelected = (ctx, id, protocol, _) => {
@@ -177,6 +178,7 @@ export function Board () {
   console.log(boardName, boardHeadersDef)
   const containerRef = useRef(null);
   const imgRef = useRef(null);
+  const { height: windowHeight } = useWindowDimensions();
   const { width: containerWidth, height: containerHeight } = useResizeObserver(containerRef);
   const { width: imgWidth, height: imgHeight } = useResizeObserver(imgRef);
   const [ imgOriginalDimension, setImgOriginalDimension ] = useState({
@@ -191,6 +193,10 @@ export function Board () {
     });
   }
 
+  const _margin = 40;
+  const _headerHeight = 103; // TODO Compute this directly from the header
+  const boardImgHeight = windowHeight - (_headerHeight + 2 * _margin);
+
   // Offset relative to the container the image is wrapped in.
   // The image is centered inside that container.
   const imagePos = { 
@@ -200,8 +206,8 @@ export function Board () {
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div className="board-container" style={{ minWidth: containerWidth }} ref={containerRef}>
-        <img onLoad={onImgLoad} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+      <div className="board-container" style={{ marginTop: _margin, minWidth: containerWidth }} ref={containerRef}>
+        <img style={{ height: boardImgHeight }} onLoad={onImgLoad} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
         <div className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 
