@@ -1,8 +1,9 @@
+import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
-import bone from '../../am335-boneblack.json';
 import './DeviceTree.css';
 
 export function DeviceTreeOutput() {
+  const { pins: boardPinsDef } = useBoardContext();
   const { selectedPins } = useSelectedPinContext();
 
   const separateBusses = (pins, busName) => (
@@ -12,7 +13,7 @@ export function DeviceTreeOutput() {
         prev[currBus] = [];
       }
       prev[currBus].push({
-        address: bone.pins[curr].address,
+        address: boardPinsDef[curr].address,
         mode: selectedPins[curr].mode,
         func: selectedPins[curr].function,
         number: selectedPins[curr].number

@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
+import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
 import { useResizeObserver, useTableSizeObserver } from '../../hooks/resize.js';
-import bone from '../../am335-boneblack.json';
 import './Board.css';
 
 const isSelected = (ctx, id, protocol, _) => {
@@ -52,9 +52,10 @@ const Legend = ({ align, id, desc, shown }) => (
 );
 
 function Pin({ offset, innerSize, borderSize, pin, shown }) {
+  const { pins: boardPinsDef } = useBoardContext()
   const UnwrappedPin = ({ shown, id, justify }) => {
-    const desc = (align) => (bone.pins[id] ? (
-      <Legend shown={shown} id={id} align={align} desc={bone.pins[id]}/>) : (
+    const desc = (align) => (boardPinsDef[id] ? (
+      <Legend shown={shown} id={id} align={align} desc={boardPinsDef[id]}/>) : (
       <td>{id}</td>));
 
     return (
@@ -172,6 +173,8 @@ function Header({ ratio, pitch, header, imagePos }) {
 }
 
 export function Board () {
+  const { name: boardName, image: boardImage, headers: boardHeadersDef } = useBoardContext()
+  console.log(boardName, boardHeadersDef)
   const containerRef = useRef(null);
   const imgRef = useRef(null);
   const { width: containerWidth, height: containerHeight } = useResizeObserver(containerRef);
@@ -196,11 +199,11 @@ export function Board () {
   }
 
   return (
-    <SelectedHeaderProvider headerInit={bone.headers.length ? bone.headers[0].name : ''}>
+    <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
       <div className="board-container" style={{ minWidth: containerWidth }} ref={containerRef}>
-        <img onLoad={onImgLoad} ref={imgRef} src={require(`../../assets/images/${bone.metadata.image}`)} alt={bone.metadata.name}/>
+        <img onLoad={onImgLoad} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
         <div className="pin-overlay">
-          {bone.headers.map(header =>
+          {boardHeadersDef.map(header =>
             <Header 
               ratio={(imgOriginalDimension.originalWidth && containerWidth) ? (imgWidth / imgOriginalDimension.originalWidth) : 1}
               pitch={header.pitch}

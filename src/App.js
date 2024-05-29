@@ -1,7 +1,9 @@
+import { BoardProvider } from './contexts/board.js'
+import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
-import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import MindLogo from './assets/images/logos/mind_logo.svg';
+import bone from './am335-boneblack.json';
 
 import './App.css';
 
@@ -43,11 +45,13 @@ function Header() {
 function App() {
   return (
     <SelectedPinProvider>
-       <Header/>
-       <section className="body">
-        <Board/>
-        <DeviceTreeOutput/>
-       </section>
+      <Header/>
+      <section className="body">
+        <BoardProvider boardDefinition={bone}>
+          <Board/>
+          <DeviceTreeOutput/>
+        </BoardProvider>
+      </section>
     </SelectedPinProvider>
   );
 }
