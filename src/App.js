@@ -44,15 +44,15 @@ function Header() {
 
 function App() {
   return (
-    <SelectedPinProvider>
-      <Header/>
-      <section className="body">
-        <BoardProvider boardDefinition={bone}>
-          <Board/>
-          <DeviceTreeOutput/>
-        </BoardProvider>
-      </section>
-    </SelectedPinProvider>
+    <BoardProvider boardDefinition={bone}>
+      <SelectedPinProvider>
+        <Header/>
+        <section className="body">
+            <Board/>
+            <DeviceTreeOutput/>
+        </section>
+      </SelectedPinProvider>
+    </BoardProvider>
   );
 }
 

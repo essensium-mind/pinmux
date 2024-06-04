@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import bone from '../am335-boneblack.json';
+import { useBoardContext } from './board.js'
 
 const SelectedPinContext = React.createContext({
   selectedPins: {},
@@ -18,6 +18,7 @@ export function useSelectedPinContext () {
 
 export function SelectedPinProvider ({ children }) {
   const [selectedPins, setSelectedPins] = useState({});
+  const { pins } = useBoardContext()
 
   const clear = () => setSelectedPins({});
 
@@ -56,9 +57,9 @@ export function SelectedPinProvider ({ children }) {
         newState[pinClash] = undefined;
       }
 
-      const muxablePins = Object.keys(bone.pins)
-        .filter(k => (typeof bone.pins[k] !== 'string' && bone.pins[k].tags))
-        .reduce((previous, k) => ({ ...previous, [k]: bone.pins[k] }),{});
+      const muxablePins = Object.keys(pins)
+        .filter(k => (typeof pins[k] !== 'string' && pins[k].tags))
+        .reduce((previous, k) => ({ ...previous, [k]: pins[k] }),{});
 
       const pinsRelatedToProtocol = Object.keys(muxablePins)
         .filter(k => muxablePins[k].tags.includes(protocol))
