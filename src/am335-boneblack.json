@@ -1,17 +1,31 @@
 {
-  "metadata": {
+  "metadata": [{
+    "id": "bbb",
     "name": "BeagleBone Black",
-    "image": "bbb.png",
-    "scope": "linux"
-  },
+    "image": "bbb.png"
+  }, {
+    "id": "bbbw",
+    "name": "BeagleBone Black Wireless",
+    "image": "bbbw.png"
+  }
+  ],
   "headers": [
     {
       "name": "P9",
       "style": "female",
-      "pitch": 23.17,
+      "pitch": {
+        "bbb": 23.17,
+        "bbbw": 40
+      },
       "position": {
-        "x": 0,
-        "y": 190
+        "bbb": {
+          "x": 0,
+          "y": 190
+        },
+        "bbbw": {
+          "x": 9,
+          "y": 327
+        }
       },
       "contents": [
         ["P9_1", "P9_2"],
@@ -42,10 +56,19 @@
     {
       "name": "P8",
       "style": "female",
-      "pitch": 23.17,
+      "pitch": {
+        "bbb": 23.17,
+        "bbbw": 40
+      },
       "position": {
-        "x": 435,
-        "y": 185
+        "bbb": {
+          "x": 435,
+          "y": 185
+        },
+        "bbbw": {
+          "x": 769,
+          "y": 330
+        }
       },
       "contents": [
         ["P8_1", "P8_2"],
@@ -76,10 +99,19 @@
     {
       "name": "J1",
       "style": "male",
-      "pitch": 23.17,
+      "pitch": {
+        "bbb": 23.17,
+        "bbbw": 40
+      },
       "position": {
-        "x": 55,
-        "y": 401
+        "bbb": {
+          "x": 55,
+          "y": 401
+        },
+        "bbbw": {
+          "x": 101,
+          "y": 694
+        }
       },
       "contents": [
         "J1_1",
