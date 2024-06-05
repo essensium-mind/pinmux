@@ -175,7 +175,6 @@ function Header({ ratio, pitch, header, imagePos }) {
 
 export function Board () {
   const { name: boardName, image: boardImage, headers: boardHeadersDef } = useBoardContext()
-  console.log(boardName, boardHeadersDef)
   const containerRef = useRef(null);
   const imgRef = useRef(null);
   const { height: windowHeight } = useWindowDimensions();
