@@ -2,7 +2,10 @@
   "metadata": [{
     "id": "bbb",
     "name": "BeagleBone Black",
-    "image": "bbb.png"
+    "image": {
+      "front": "bbb.png",
+      "back": "bbb-back.png"
+    }
   }, {
     "id": "bbbw",
     "name": "BeagleBone Black Wireless",
@@ -12,6 +15,7 @@
   "headers": [
     {
       "name": "P9",
+      "side": "front",
       "style": "female",
       "pitch": {
         "bbb": 23.17,
@@ -55,6 +59,7 @@
     },
     {
       "name": "P8",
+      "side": "front",
       "style": "female",
       "pitch": {
         "bbb": 23.17,
@@ -98,6 +103,7 @@
     },
     {
       "name": "J1",
+      "side": "front",
       "style": "male",
       "pitch": {
         "bbb": 23.17,
