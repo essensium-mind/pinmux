@@ -42,7 +42,6 @@ export function BoardProvider ({ boardDefinition, children }) {
         ? metadata.image[side]
         : metadata.image,
       headers: board.headers.map(h => {
-        console.log(side)
         if (h["side"] !== undefined && h["side"] !== side) {
           return undefined
         }
