@@ -1,4 +1,4 @@
-import { BoardProvider } from './contexts/board.js'
+import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
@@ -25,11 +25,13 @@ function ClearButton() {
 }
 
 function Header() {
+  const { name } = useBoardContext();
+
   return (
     <section className="header">
       <li>
         <ul><img height="80" src={MindLogo} alt='mind-logo'/></ul>
-        <ul>PinMux</ul>
+        <ul>PinMux - {name}</ul>
         <ul>
           <ClearButton/>
         </ul>
