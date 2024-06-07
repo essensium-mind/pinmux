@@ -33,20 +33,22 @@ const ClickableLegend = ({id, type, desc}) => {
   );
 }
 
-const Legend = ({ align, id, desc, shown }) => (
+const Legend = ({ align, desc, id, maxHeight, shown, }) => (
   <td style={{ textAlign: align, visibility: shown ? 'visible' : 'hidden' }}>
-    {typeof desc === 'string' ? (
-      <span className={`pin-desc ${desc}`}>{desc}</span>
-    ) : desc.style ? (
-      <span className={`pin-desc ${desc.style}`}>{desc.name}</span>
-    ) : align === 'right' ? (
-      desc.tags.toReversed().map(tag => (
-        <ClickableLegend key={id + tag} id={id} type={tag} desc={desc[tag]}/>
-      ))) : (
-      desc.tags.map(tag => (
-        <ClickableLegend key={id + tag} id={id} type={tag} desc={desc[tag]}/>
-      ))
-    )}
+    <span style={{ fontSize: maxHeight > 30 ? Math.floor(maxHeight / 2) : Math.floor(maxHeight * 0.6) }}>
+      {typeof desc === 'string' ? (
+        <span className={`pin-desc ${desc}`}>{desc}</span>
+      ) : desc.style ? (
+        <span className={`pin-desc ${desc.style}`}>{desc.name}</span>
+      ) : align === 'right' ? (
+        desc.tags.toReversed().map(tag => (
+          <ClickableLegend key={id + tag} id={id} type={tag} desc={desc[tag]}/>
+        ))) : (
+        desc.tags.map(tag => (
+          <ClickableLegend key={id + tag} id={id} type={tag} desc={desc[tag]}/>
+        ))
+      )}
+    </span>
   </td>
 );
 
@@ -54,7 +56,7 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
   const { pins: boardPinsDef } = useBoardContext()
   const UnwrappedPin = ({ shown, id, justify }) => {
     const desc = (align) => (boardPinsDef[id] ? (
-      <Legend shown={shown} id={id} align={align} desc={boardPinsDef[id]}/>) : (
+      <Legend maxHeight={innerSize + 2 * borderSize} shown={shown} id={id} align={align} desc={boardPinsDef[id]}/>) : (
       <td>{id}</td>));
 
     return (
