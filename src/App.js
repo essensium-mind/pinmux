@@ -1,4 +1,5 @@
 import { useBoardContext, BoardProvider } from './contexts/board.js'
+import { AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
@@ -47,13 +48,15 @@ function Header() {
 function App() {
   return (
     <BoardProvider boardDefinition={bone}>
-      <SelectedPinProvider>
-        <Header/>
-        <section className="body">
-            <Board/>
-            <DeviceTreeOutput/>
-        </section>
-      </SelectedPinProvider>
+      <AppGeometryProvider>
+        <SelectedPinProvider>
+          <Header/>
+          <section className="body">
+              <Board/>
+              <DeviceTreeOutput/>
+          </section>
+        </SelectedPinProvider>
+      </AppGeometryProvider>
     </BoardProvider>
   );
 }

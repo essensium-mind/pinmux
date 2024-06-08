@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
+import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
 import { useResizeObserver, useTableSizeObserver } from '../../hooks/resize.js';
-import { useWindowDimensions } from '../../hooks/windows.js';
 import './Board.css';
 
 const isSelected = (ctx, id, protocol, _) => {
@@ -89,8 +89,10 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
   }
 }
 
-function Header({ ratio, pitch, header, imagePos }) {
+function Header({ pitch, header }) {
+  const { board: { image: { pos: imagePos, ratio }}} = useAppGeometryContext();
   const { select, selectedHeader } = useSelectedHeaderContext()
+
   const shown = selectedHeader === header.name;
 
   const headerRef = useRef(null);
@@ -175,44 +177,28 @@ function Header({ ratio, pitch, header, imagePos }) {
 
 export function Board () {
   const { name: boardName, image: boardImage, headers: boardHeadersDef } = useBoardContext()
-  const containerRef = useRef(null);
-  const imgRef = useRef(null);
-  const { height: windowHeight } = useWindowDimensions();
-  const { width: containerWidth, height: containerHeight } = useResizeObserver(containerRef);
-  const { width: imgWidth, height: imgHeight } = useResizeObserver(imgRef);
-  const [ imgOriginalDimension, setImgOriginalDimension ] = useState({
-    originalWidth: undefined,
-    originalHeight: undefined,
-  });
-
-  const onImgLoad = ({ target }) => {
-    setImgOriginalDimension({
-      originalWidth: target.naturalWidth,
-      originalHeight: target.naturalHeigh
-    });
-  }
+  const { browserWindow: { height: windowHeight }, board: { 
+    container: { 
+      ref: containerRef,
+      size: { width: containerWidth }
+    },
+    image: { 
+      ref: imgRef, 
+    } 
+  } } = useAppGeometryContext();
 
   const _margin = 40;
   const _headerHeight = 103; // TODO Compute this directly from the header
   const boardImgHeight = windowHeight - (_headerHeight + 2 * _margin);
 
-  // Offset relative to the container the image is wrapped in.
-  // The image is centered inside that container.
-  const imagePos = { 
-    left: (containerWidth - imgWidth) / 2,
-    top: (containerHeight - imgHeight) / 2,
-  }
-
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
       <div className="board-container" style={{ marginTop: _margin, minWidth: containerWidth }} ref={containerRef}>
-        <img style={{ height: boardImgHeight }} onLoad={onImgLoad} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+        <img style={{ height: boardImgHeight }} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
         <div className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 
-              ratio={(imgOriginalDimension.originalWidth && containerWidth) ? (imgWidth / imgOriginalDimension.originalWidth) : 1}
               pitch={header.pitch}
-              imagePos={imagePos}
               key={`pin-header-${header.name}`} 
               header={header}
             />
