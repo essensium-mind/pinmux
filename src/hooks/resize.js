@@ -42,11 +42,11 @@ export function useTableSizeObserver (ref) {
     const resizeObserver = new ResizeObserver(() => {
       if (ref.current.children.length) {
         const row = ref.current.children.length;
-        const column = ref.current.children[0].length;
+        const column = ref.current.firstChild.length;
         if (row !== size.row || column !== size.column) {
           setSize({
-            row: ref.current.children.length,
-            column: ref.current.children[0].length
+            row,
+            column
           });
         }
 

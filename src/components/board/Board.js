@@ -90,24 +90,27 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
 }
 
 function Header({ pitch, header }) {
-  const { board: { image: { pos: imagePos, ratio }}} = useAppGeometryContext();
+  const { board: {
+    overlay: {
+      headers: headersGeometry
+    },
+    image: { pos: imagePos, ratio }
+  } } = useAppGeometryContext();
   const { select, selectedHeader } = useSelectedHeaderContext()
 
   const shown = selectedHeader === header.name;
 
-  const headerRef = useRef(null);
-  const tableRef = useRef(null);
-
-  const { height: headerHeight } = useResizeObserver(headerRef);
-  const { size, columnSize } = useTableSizeObserver(tableRef);
+  const { columns, rows, header: { size: { height : headerHeight } } } = headersGeometry[header.name];
+  const columnSize = columns.length;
+  const rowSize = rows.length;
 
   let xOffset;
-  if (size.column === 0 || size.row === 0) {
+  if (columnSize === 0 || rowSize === 0) {
     xOffset = 0;
   } else {
     xOffset = header.justify === 'vertical' ?
       (imagePos.left + (ratio * header.position.x)) :
-      (imagePos.left + (ratio * header.position.x) - columnSize[0])
+      (imagePos.left + (ratio * header.position.x) - columns[0])
   }
 
   // FIXME Only vertical header are supported so far.
@@ -145,6 +148,7 @@ function Header({ pitch, header }) {
         zIndex: shown ? 10 : 5
       }}
       className="header-connector"
+      id={header.name}
     >
       <div 
         style={{
@@ -152,7 +156,6 @@ function Header({ pitch, header }) {
           top: imagePos.top + (ratio * header.position.y) - headerHeight - 18,
           left: imagePos.left + (ratio * header.position.x),
         }} 
-        ref={headerRef}
         className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}
       >
         <span onClick={() => select(header.name)}>{header.name}</span>
@@ -165,7 +168,7 @@ function Header({ pitch, header }) {
           zIndex: shown ? 10 : 5
         }}
       >
-        <tbody ref={tableRef}>
+        <tbody>
           {header.contents.map((pin, index) => (
             <Pin offset={offsetIndex[index]} innerSize={innerSize} borderSize={borderSize} key={`pin-header-line-${header.name}-${index}`} shown={shown} pin={pin} />
           ))}
@@ -183,6 +186,9 @@ export function Board () {
       margin,
       size: { width: containerWidth }
     },
+    overlay: {
+      ref: overlayRef
+    },
     image: {
       ref: imgRef,
       size: { height: imgHeight }
@@ -191,9 +197,9 @@ export function Board () {
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div className="board-container" style={{ margin, minWidth: containerWidth }} ref={containerRef}>
-        <img style={{ height: imgHeight }} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
-        <div className="pin-overlay">
+      <div ref={containerRef} className="board-container" style={{ margin, minWidth: containerWidth }}>
+        <img ref={imgRef} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+        <div ref={overlayRef} className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 
               pitch={header.pitch}

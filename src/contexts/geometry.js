@@ -1,5 +1,6 @@
-import React, { useRef, useContext } from 'react'
-import { useResizeObserver } from '../hooks/resize'
+import React, { useRef, useContext, useEffect, useState } from 'react'
+import { useBoardContext } from './board'
+import { useResizeObserver, useTableSizeObserver } from '../hooks/resize'
 import { useWindowDimensions } from '../hooks/windows.js';
 
 const AppGeometryContext = React.createContext({
@@ -19,6 +20,7 @@ const AppGeometryContext = React.createContext({
     }
   }],
   board: {
+    headers: {},
     container: {
       ref: undefined,
       margin: 0,
@@ -69,11 +71,13 @@ export function useAppGeometryContext () {
 }
 
 export function AppGeometryProvider ({ children }) {
-  const windowDimensions = useWindowDimensions();
+  const windowDimensions = useWindowDimensions()
+  const { headers } = useBoardContext()
 
-  const imgRef = useRef()
-  const containerRef = useRef()
   const headerRef = useRef()
+  const containerRef = useRef()
+  const imgRef = useRef()
+  const overlayRef = useRef()
 
   const boardContainerSize = useResizeObserver(containerRef) 
   const headerSize = useResizeObserver(headerRef) 
@@ -82,6 +86,52 @@ export function AppGeometryProvider ({ children }) {
   const boardImgHeight = windowDimensions.height - (headerSize.height + (2 * boardMargin))
   const ratio = (imgRef.current && imgRef.current.naturalHeight > 1) ? (boardImgHeight / imgRef.current.naturalHeight) : 1
   const boardImgWidth = imgRef.current ? imgRef.current.naturalWidth * ratio : 0
+
+  const _headers = overlayRef.current
+    ? Array.from(overlayRef.current.children).reduce((obj, x) => ({
+      ...obj,
+      [x.id]: {
+        ref: x,
+        pos: {
+          top: 0,
+          left: 0,
+        },
+        header: {
+          size: {
+            width: x.firstChild.offsetWidth,
+            height: x.firstChild.offsetHeight,
+          },
+          pos: {
+            top: x.firstChild.offsetTop,
+            left: x.firstChild.offsetLeft,
+          }
+        },
+        rows: Array.from(x.children[1].firstChild.children).map(x => x.offsetHeight),
+        columns: Array.from(x.children[1].firstChild.firstChild.children).map(x => x.offsetWidth),
+      },
+    }), {})
+    : headers.reduce((obj, x) => ({
+      ...obj,
+      [x.name]: {
+        ref: undefined,
+        pos: {
+          top: 0,
+          left: 0,
+        },
+        header: {
+          size: {
+            width: 0,
+            height: 0,
+          },
+          pos: {
+            top: 0,
+            left: 0,
+          },
+        },
+        rows: [0],
+        columns: [0],
+      }
+    }), {})
 
   return (
     <AppGeometryContext.Provider value={{
@@ -95,6 +145,10 @@ export function AppGeometryProvider ({ children }) {
           ref: containerRef,
           margin: boardMargin,
           size: boardContainerSize,
+        },
+        overlay: {
+          ref: overlayRef,
+          headers: _headers
         },
         image: {
           ref: imgRef,
