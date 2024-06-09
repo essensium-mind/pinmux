@@ -177,24 +177,22 @@ function Header({ pitch, header }) {
 
 export function Board () {
   const { name: boardName, image: boardImage, headers: boardHeadersDef } = useBoardContext()
-  const { browserWindow: { height: windowHeight }, board: { 
+  const { board: {
     container: { 
       ref: containerRef,
+      margin,
       size: { width: containerWidth }
     },
-    image: { 
-      ref: imgRef, 
-    } 
+    image: {
+      ref: imgRef,
+      size: { height: imgHeight }
+    }
   } } = useAppGeometryContext();
-
-  const _margin = 40;
-  const _headerHeight = 103; // TODO Compute this directly from the header
-  const boardImgHeight = windowHeight - (_headerHeight + 2 * _margin);
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div className="board-container" style={{ marginTop: _margin, minWidth: containerWidth }} ref={containerRef}>
-        <img style={{ height: boardImgHeight }} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+      <div className="board-container" style={{ margin, minWidth: containerWidth }} ref={containerRef}>
+        <img style={{ height: imgHeight }} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
         <div className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 
