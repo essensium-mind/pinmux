@@ -14,16 +14,15 @@ const AppGeometryContext = React.createContext({
       width: 0,
       height: 0,
     },
-    pos: {
-      top: 0,
-      left: 0,
-    }
   }],
   board: {
     headers: {},
     container: {
       ref: undefined,
-      margin: 0,
+      /**
+       * Container dimensions set by the CSS. This can't be computed and need
+       * to be fetched at run-time from a reference to that container.
+       */
       size: {
         width: 0,
         height: 0,
@@ -31,10 +30,20 @@ const AppGeometryContext = React.createContext({
     },
     image: {
       ref: undefined,
+      /**
+       * Image margin from the container.
+       */
+      margin: 0,
+      /**
+       * Original board image dimensions.
+       */
       original: {
         width: 0,
         height: 0,
       },
+      /**
+       * Force the board image dimensions to fit the container.
+       */
       size: {
         width: 0,
         height: 0,
@@ -53,8 +62,7 @@ const AppGeometryContext = React.createContext({
       }
     },
     overlay: {
-      width: 0,
-      height: 0,
+      ref: undefined,
     }
   },
   setBoardReferences: undefined,
@@ -70,85 +78,145 @@ export function useAppGeometryContext () {
   return context;
 }
 
+const _boardOverlayHeadersGeometryDefault = {
+  ref: undefined,
+  header: {
+    size: {
+      width: 0,
+      height: 0,
+    },
+    pos: {
+      top: 0,
+      left: 0,
+    },
+  },
+  pins: {
+    size: {
+      width: 0,
+      height: 0,
+    },
+    pos: {
+      top: 0,
+      left: 0,
+    },
+    rows: [0],
+    columns: [0],
+  }
+}
+
+function _boardOverlayHeadersGeometry (ref, boardImg) {
+  const { headers } = useBoardContext()
+
+  if (ref.current === undefined) {
+    return headers.reduce((obj, x) => ({
+      ...obj,
+      [x.name]: _boardOverlayHeadersGeometryDefault
+    }), {})
+  }
+
+  return Array.from(ref.current.children).reduce((obj, x) => {
+    const { position: headerOriginalPosition, pitch: headerOriginalPitch } = headers.find(h => h.name === x.id)
+    const pinHeaderLabel = x.firstChild // div -> span
+    const pinHeader = x.lastChild.firstChild // div -> table -> tbody 
+
+    return {
+      ...obj,
+      [x.id]: {
+        ref: x,
+        header: {
+          // TODO change size based on the window size.
+          size: {
+            width: pinHeaderLabel.offsetWidth,
+            height: pinHeaderLabel.offsetHeight,
+          },
+          pos: {
+            top: boardImg.pos.top + (boardImg.ratio * headerOriginalPosition.y) - x.firstChild.offsetHeight - 18,
+            left: boardImg.pos.left + (boardImg.ratio * headerOriginalPosition.x),
+          }
+        },
+        pins: {
+          pitch: boardImg.ratio * headerOriginalPitch,
+          pos: {
+            top: boardImg.pos.top + (boardImg.ratio * headerOriginalPosition.y),
+            // TODO this depends on the ping legend justification
+            left: boardImg.pos.left + (boardImg.ratio * headerOriginalPosition.x) - pinHeader.firstChild.firstChild.offsetWidth, // tbody -> tr -> td -> offsetWidth
+          },
+          size: {
+            width: x.offsetWidth,
+            height: x.offsetHeight,
+          },
+          rows: Array.from(pinHeader.children).map(x => x.offsetHeight),
+          columns: Array.from(pinHeader.firstChild.children).map(x => x.offsetWidth),
+        }
+      }
+    }
+  }, {})
+}
+
+const _boardImageGeometryProviderDefault = {
+  ref: undefined,
+  original: {
+    width: 0,
+    height: 0
+  },
+  size: {
+    width: 0,
+    height: 0,
+  },
+  ratio: 1,
+  pos: {
+    top: 0,
+    left: 0,
+  }
+}
+
+function _boardImageGeometryProvider (ref, windowDimensions, headerSize, containerSize) {
+  if (ref.current === undefined) {
+    return {
+      ..._boardImageGeometryProviderDefault,
+      ref,
+    }
+  }
+
+  const boardMargin = 40
+  const boardImgHeight = windowDimensions.height - (headerSize.height + (2 * boardMargin))
+  const ratio = (ref.current.naturalHeight > 1) ? (boardImgHeight / ref.current.naturalHeight) : 1
+
+  const boardImgWidth = ref.current.naturalWidth * ratio
+
+  return {
+    ref,
+    margin: boardMargin,
+    original: {
+      width: ref.current ? ref.current.naturalWidth : 0,
+      height: ref.current ? ref.current.naturalHeight: 0,
+    },
+    size: {
+      width: boardImgWidth,
+      height: boardImgHeight,
+    },
+    ratio,
+    pos: {
+      left: (containerSize.width - boardImgWidth) / 2,
+      top: (containerSize.height - boardImgHeight) / 2,
+    }
+  }
+}
+
 export function AppGeometryProvider ({ children }) {
   const windowDimensions = useWindowDimensions()
-  const { headers } = useBoardContext()
 
   const headerRef = useRef()
   const containerRef = useRef()
   const imgRef = useRef()
   const overlayRef = useRef()
 
-  const boardContainerSize = useResizeObserver(containerRef) 
-  const headerSize = useResizeObserver(headerRef) 
+  const boardContainerSize = useResizeObserver(containerRef)
+  const headerSize = useResizeObserver(headerRef)
 
-  const boardMargin = 40
-  const boardImgHeight = windowDimensions.height - (headerSize.height + (2 * boardMargin))
-  const ratio = (imgRef.current && imgRef.current.naturalHeight > 1) ? (boardImgHeight / imgRef.current.naturalHeight) : 1
-  const boardImgWidth = imgRef.current ? imgRef.current.naturalWidth * ratio : 0
-  const boardImgPos = {
-    left: (boardContainerSize.width - boardImgWidth) / 2,
-    top: (boardContainerSize.height - boardImgHeight) / 2,
-  }
+  const boardImageGeometry = _boardImageGeometryProvider(imgRef, windowDimensions, headerSize, boardContainerSize)
 
-  const _headers = overlayRef.current
-    ? Array.from(overlayRef.current.children).reduce((obj, x) => ({
-      ...obj,
-      [x.id]: {
-        ref: x,
-       header: {
-          size: {
-            width: x.firstChild.offsetWidth,
-            height: x.firstChild.offsetHeight,
-          },
-          pos: {
-            top: boardImgPos.top + (ratio * headers.find(h => h.name === x.id).position.y) - x.firstChild.offsetHeight - 18,
-            left: boardImgPos.left + (ratio * headers.find(h => h.name === x.id).position.x),
-          }
-        },
-        pins: {
-          pitch: ratio * headers.find(h => h.name === x.id).pitch,
-          pos: {
-            top: boardImgPos.top + (ratio * headers.find(h => h.name === x.id).position.y),
-            left: boardImgPos.left + (ratio * headers.find(h => h.name === x.id).position.x) - x.children[1].firstChild.firstChild.firstChild.offsetWidth,
-          },
-          size: {
-            width: x.offsetWidth,
-            height: x.offsetHeight,
-          },
-          rows: Array.from(x.children[1].firstChild.children).map(x => x.offsetHeight),
-          columns: Array.from(x.children[1].firstChild.firstChild.children).map(x => x.offsetWidth),
-        }
-      },
-    }), {})
-    : headers.reduce((obj, x) => ({
-      ...obj,
-      [x.name]: {
-        ref: undefined,
-        header: {
-          size: {
-            width: 0,
-            height: 0,
-          },
-          pos: {
-            top: 0,
-            left: 0,
-          },
-        },
-        pins: {
-          size: {
-            width: 0,
-            height: 0,
-          },
-          pos: {
-            top: 0,
-            left: 0,
-          },
-          rows: [0],
-          columns: [0],
-        }
-      }
-    }), {})
+  const boardOverlayHeadersGeometry = _boardOverlayHeadersGeometry(overlayRef, boardImageGeometry)
 
   return (
     <AppGeometryContext.Provider value={{
@@ -160,26 +228,13 @@ export function AppGeometryProvider ({ children }) {
       board: {
         container: {
           ref: containerRef,
-          margin: boardMargin,
           size: boardContainerSize,
         },
         overlay: {
           ref: overlayRef,
-          headers: _headers
+          headers: boardOverlayHeadersGeometry,
         },
-        image: {
-          ref: imgRef,
-          original: {
-            width: imgRef.current ? imgRef.current.naturalWidth : 0,
-            height: imgRef.current ? imgRef.current.naturalHeight: 0,
-          },
-          size: {
-            width: boardImgWidth,
-            height: boardImgHeight,
-          },
-          ratio,
-          pos: boardImgPos
-        }
+        image: boardImageGeometry,
       },
     }}>
       {children}

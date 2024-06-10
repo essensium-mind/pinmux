@@ -146,8 +146,7 @@ function Header({ header }) {
       <div 
         style={{
           position: 'absolute',
-          top: headerPos.top,
-          left: headerPos.left,
+          ...headerPos,
         }} 
         className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}
       >
@@ -156,9 +155,8 @@ function Header({ header }) {
       <table
         style={{
           position: 'absolute',
-          top: pinsPos.top,
-          left: pinsPos.left,
-          zIndex: shown ? 10 : 5
+          zIndex: shown ? 10 : 5,
+          ...pinsPos,
         }}
       >
         <tbody>
@@ -176,13 +174,13 @@ export function Board () {
   const { board: {
     container: { 
       ref: containerRef,
-      margin,
       size: { width: containerWidth }
     },
     overlay: {
       ref: overlayRef
     },
     image: {
+      margin,
       ref: imgRef,
       size: { height: imgHeight }
     }
