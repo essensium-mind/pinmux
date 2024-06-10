@@ -1,9 +1,7 @@
-import { useRef } from 'react';
 import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
-import { useResizeObserver, useTableSizeObserver } from '../../hooks/resize.js';
 import './Board.css';
 
 const isSelected = (ctx, id, protocol, _) => {
@@ -89,33 +87,28 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
   }
 }
 
-function Header({ pitch, header }) {
+function Header({ header }) {
+  const { select, selectedHeader } = useSelectedHeaderContext()
+  const shown = selectedHeader === header.name;
+
   const { board: {
     overlay: {
       headers: headersGeometry
     },
-    image: { pos: imagePos, ratio }
   } } = useAppGeometryContext();
-  const { select, selectedHeader } = useSelectedHeaderContext()
 
-  const shown = selectedHeader === header.name;
-
-  const { columns, rows, header: { size: { height : headerHeight } } } = headersGeometry[header.name];
-  const columnSize = columns.length;
-  const rowSize = rows.length;
-
-  let xOffset;
-  if (columnSize === 0 || rowSize === 0) {
-    xOffset = 0;
-  } else {
-    xOffset = header.justify === 'vertical' ?
-      (imagePos.left + (ratio * header.position.x)) :
-      (imagePos.left + (ratio * header.position.x) - columns[0])
-  }
+  const {
+    pins: {
+      pitch,
+      pos: pinsPos,
+    },
+    header: {
+      pos: headerPos,
+    }
+  } = headersGeometry[header.name];
 
   // FIXME Only vertical header are supported so far.
   const headerLength = header.contents.length;
-  const adjustedPitch = ratio * pitch;
 
   // Because pixels are not precise enough to perfectly match with the header
   // representation in the image. We need to add a pixel offset on a regular
@@ -124,14 +117,14 @@ function Header({ pitch, header }) {
   // The following variable are computed based on a visual representation
   // I found pleasing and does not follow any guidelines.
   const _borderPixelGrow = 1; // How much bigger in pixel the border is relative to innerSize
-  const _pinSize = (Math.floor(adjustedPitch) - (2 * _borderPixelGrow)) / 3;
+  const _pinSize = (Math.floor(pitch) - (2 * _borderPixelGrow)) / 3;
   const innerSize = Math.floor(_pinSize) + Math.round((_pinSize - Math.floor(_pinSize)) * 3);
   const borderSize = Math.floor(_pinSize + _borderPixelGrow);
 
   // Based on the rounded header pixel height, compute how many pixels we have
   // to compensate to match the representation of the header in the image.
   const _headerRepresentationTotalHeight = innerSize + (2 * borderSize);
-  const missingPixels = Math.round(adjustedPitch * headerLength) - (_headerRepresentationTotalHeight * headerLength)
+  const missingPixels = Math.round(pitch * headerLength) - (_headerRepresentationTotalHeight * headerLength)
 
   // Create an evenly distribution of the offsets.
   const offsetIndex = (missingPixels < (headerLength / 2)) ?
@@ -153,8 +146,8 @@ function Header({ pitch, header }) {
       <div 
         style={{
           position: 'absolute',
-          top: imagePos.top + (ratio * header.position.y) - headerHeight - 18,
-          left: imagePos.left + (ratio * header.position.x),
+          top: headerPos.top,
+          left: headerPos.left,
         }} 
         className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}
       >
@@ -163,8 +156,8 @@ function Header({ pitch, header }) {
       <table
         style={{
           position: 'absolute',
-          top: imagePos.top + (ratio * header.position.y),
-          left: xOffset,
+          top: pinsPos.top,
+          left: pinsPos.left,
           zIndex: shown ? 10 : 5
         }}
       >
@@ -202,7 +195,6 @@ export function Board () {
         <div ref={overlayRef} className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 
-              pitch={header.pitch}
               key={`pin-header-${header.name}`} 
               header={header}
             />

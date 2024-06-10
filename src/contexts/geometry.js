@@ -1,6 +1,6 @@
-import React, { useRef, useContext, useEffect, useState } from 'react'
+import React, { useRef, useContext } from 'react'
 import { useBoardContext } from './board'
-import { useResizeObserver, useTableSizeObserver } from '../hooks/resize'
+import { useResizeObserver } from '../hooks/resize'
 import { useWindowDimensions } from '../hooks/windows.js';
 
 const AppGeometryContext = React.createContext({
@@ -86,38 +86,45 @@ export function AppGeometryProvider ({ children }) {
   const boardImgHeight = windowDimensions.height - (headerSize.height + (2 * boardMargin))
   const ratio = (imgRef.current && imgRef.current.naturalHeight > 1) ? (boardImgHeight / imgRef.current.naturalHeight) : 1
   const boardImgWidth = imgRef.current ? imgRef.current.naturalWidth * ratio : 0
+  const boardImgPos = {
+    left: (boardContainerSize.width - boardImgWidth) / 2,
+    top: (boardContainerSize.height - boardImgHeight) / 2,
+  }
 
   const _headers = overlayRef.current
     ? Array.from(overlayRef.current.children).reduce((obj, x) => ({
       ...obj,
       [x.id]: {
         ref: x,
-        pos: {
-          top: 0,
-          left: 0,
-        },
-        header: {
+       header: {
           size: {
             width: x.firstChild.offsetWidth,
             height: x.firstChild.offsetHeight,
           },
           pos: {
-            top: x.firstChild.offsetTop,
-            left: x.firstChild.offsetLeft,
+            top: boardImgPos.top + (ratio * headers.find(h => h.name === x.id).position.y) - x.firstChild.offsetHeight - 18,
+            left: boardImgPos.left + (ratio * headers.find(h => h.name === x.id).position.x),
           }
         },
-        rows: Array.from(x.children[1].firstChild.children).map(x => x.offsetHeight),
-        columns: Array.from(x.children[1].firstChild.firstChild.children).map(x => x.offsetWidth),
+        pins: {
+          pitch: ratio * headers.find(h => h.name === x.id).pitch,
+          pos: {
+            top: boardImgPos.top + (ratio * headers.find(h => h.name === x.id).position.y),
+            left: boardImgPos.left + (ratio * headers.find(h => h.name === x.id).position.x) - x.children[1].firstChild.firstChild.firstChild.offsetWidth,
+          },
+          size: {
+            width: x.offsetWidth,
+            height: x.offsetHeight,
+          },
+          rows: Array.from(x.children[1].firstChild.children).map(x => x.offsetHeight),
+          columns: Array.from(x.children[1].firstChild.firstChild.children).map(x => x.offsetWidth),
+        }
       },
     }), {})
     : headers.reduce((obj, x) => ({
       ...obj,
       [x.name]: {
         ref: undefined,
-        pos: {
-          top: 0,
-          left: 0,
-        },
         header: {
           size: {
             width: 0,
@@ -128,8 +135,18 @@ export function AppGeometryProvider ({ children }) {
             left: 0,
           },
         },
-        rows: [0],
-        columns: [0],
+        pins: {
+          size: {
+            width: 0,
+            height: 0,
+          },
+          pos: {
+            top: 0,
+            left: 0,
+          },
+          rows: [0],
+          columns: [0],
+        }
       }
     }), {})
 
@@ -161,10 +178,7 @@ export function AppGeometryProvider ({ children }) {
             height: boardImgHeight,
           },
           ratio,
-          pos: {
-            left: (boardContainerSize.width - boardImgWidth) / 2,
-            top: (boardContainerSize.height - boardImgHeight) / 2,
-          }
+          pos: boardImgPos
         }
       },
     }}>
