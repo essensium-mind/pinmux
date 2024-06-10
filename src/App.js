@@ -1,4 +1,5 @@
 import { useBoardContext, BoardProvider } from './contexts/board.js'
+import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
@@ -26,9 +27,10 @@ function ClearButton() {
 
 function Header() {
   const { name } = useBoardContext();
+  const { header: { ref }} = useAppGeometryContext();
 
   return (
-    <section className="header">
+    <section ref={ref} className="header">
       <li>
         <ul><img height="80" src={MindLogo} alt='mind-logo'/></ul>
         <ul>PinMux - {name}</ul>
@@ -47,13 +49,15 @@ function Header() {
 function App() {
   return (
     <BoardProvider boardDefinition={bone}>
-      <SelectedPinProvider>
-        <Header/>
-        <section className="body">
-            <Board/>
-            <DeviceTreeOutput/>
-        </section>
-      </SelectedPinProvider>
+      <AppGeometryProvider>
+        <SelectedPinProvider>
+          <Header/>
+          <section className="body">
+              <Board/>
+              <DeviceTreeOutput/>
+          </section>
+        </SelectedPinProvider>
+      </AppGeometryProvider>
     </BoardProvider>
   );
 }

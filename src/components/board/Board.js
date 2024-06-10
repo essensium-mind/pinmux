@@ -1,9 +1,7 @@
-import { useRef, useState } from 'react';
 import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
+import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
-import { useResizeObserver, useTableSizeObserver } from '../../hooks/resize.js';
-import { useWindowDimensions } from '../../hooks/windows.js';
 import './Board.css';
 
 const isSelected = (ctx, id, protocol, _) => {
@@ -89,28 +87,28 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
   }
 }
 
-function Header({ ratio, pitch, header, imagePos }) {
+function Header({ header }) {
   const { select, selectedHeader } = useSelectedHeaderContext()
   const shown = selectedHeader === header.name;
 
-  const headerRef = useRef(null);
-  const tableRef = useRef(null);
+  const { board: {
+    overlay: {
+      headers: headersGeometry
+    },
+  } } = useAppGeometryContext();
 
-  const { height: headerHeight } = useResizeObserver(headerRef);
-  const { size, columnSize } = useTableSizeObserver(tableRef);
-
-  let xOffset;
-  if (size.column === 0 || size.row === 0) {
-    xOffset = 0;
-  } else {
-    xOffset = header.justify === 'vertical' ?
-      (imagePos.left + (ratio * header.position.x)) :
-      (imagePos.left + (ratio * header.position.x) - columnSize[0])
-  }
+  const {
+    pins: {
+      pitch,
+      pos: pinsPos,
+    },
+    header: {
+      pos: headerPos,
+    }
+  } = headersGeometry[header.name];
 
   // FIXME Only vertical header are supported so far.
   const headerLength = header.contents.length;
-  const adjustedPitch = ratio * pitch;
 
   // Because pixels are not precise enough to perfectly match with the header
   // representation in the image. We need to add a pixel offset on a regular
@@ -119,14 +117,14 @@ function Header({ ratio, pitch, header, imagePos }) {
   // The following variable are computed based on a visual representation
   // I found pleasing and does not follow any guidelines.
   const _borderPixelGrow = 1; // How much bigger in pixel the border is relative to innerSize
-  const _pinSize = (Math.floor(adjustedPitch) - (2 * _borderPixelGrow)) / 3;
+  const _pinSize = (Math.floor(pitch) - (2 * _borderPixelGrow)) / 3;
   const innerSize = Math.floor(_pinSize) + Math.round((_pinSize - Math.floor(_pinSize)) * 3);
   const borderSize = Math.floor(_pinSize + _borderPixelGrow);
 
   // Based on the rounded header pixel height, compute how many pixels we have
   // to compensate to match the representation of the header in the image.
   const _headerRepresentationTotalHeight = innerSize + (2 * borderSize);
-  const missingPixels = Math.round(adjustedPitch * headerLength) - (_headerRepresentationTotalHeight * headerLength)
+  const missingPixels = Math.round(pitch * headerLength) - (_headerRepresentationTotalHeight * headerLength)
 
   // Create an evenly distribution of the offsets.
   const offsetIndex = (missingPixels < (headerLength / 2)) ?
@@ -143,14 +141,13 @@ function Header({ ratio, pitch, header, imagePos }) {
         zIndex: shown ? 10 : 5
       }}
       className="header-connector"
+      id={header.name}
     >
       <div 
         style={{
           position: 'absolute',
-          top: imagePos.top + (ratio * header.position.y) - headerHeight - 18,
-          left: imagePos.left + (ratio * header.position.x),
+          ...headerPos,
         }} 
-        ref={headerRef}
         className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}
       >
         <span onClick={() => select(header.name)}>{header.name}</span>
@@ -158,12 +155,11 @@ function Header({ ratio, pitch, header, imagePos }) {
       <table
         style={{
           position: 'absolute',
-          top: imagePos.top + (ratio * header.position.y),
-          left: xOffset,
-          zIndex: shown ? 10 : 5
+          zIndex: shown ? 10 : 5,
+          ...pinsPos,
         }}
       >
-        <tbody ref={tableRef}>
+        <tbody>
           {header.contents.map((pin, index) => (
             <Pin offset={offsetIndex[index]} innerSize={innerSize} borderSize={borderSize} key={`pin-header-line-${header.name}-${index}`} shown={shown} pin={pin} />
           ))}
@@ -175,44 +171,28 @@ function Header({ ratio, pitch, header, imagePos }) {
 
 export function Board () {
   const { name: boardName, image: boardImage, headers: boardHeadersDef } = useBoardContext()
-  const containerRef = useRef(null);
-  const imgRef = useRef(null);
-  const { height: windowHeight } = useWindowDimensions();
-  const { width: containerWidth, height: containerHeight } = useResizeObserver(containerRef);
-  const { width: imgWidth, height: imgHeight } = useResizeObserver(imgRef);
-  const [ imgOriginalDimension, setImgOriginalDimension ] = useState({
-    originalWidth: undefined,
-    originalHeight: undefined,
-  });
-
-  const onImgLoad = ({ target }) => {
-    setImgOriginalDimension({
-      originalWidth: target.naturalWidth,
-      originalHeight: target.naturalHeigh
-    });
-  }
-
-  const _margin = 40;
-  const _headerHeight = 103; // TODO Compute this directly from the header
-  const boardImgHeight = windowHeight - (_headerHeight + 2 * _margin);
-
-  // Offset relative to the container the image is wrapped in.
-  // The image is centered inside that container.
-  const imagePos = { 
-    left: (containerWidth - imgWidth) / 2,
-    top: (containerHeight - imgHeight) / 2,
-  }
+  const { board: {
+    container: { 
+      ref: containerRef,
+      size: { width: containerWidth }
+    },
+    overlay: {
+      ref: overlayRef
+    },
+    image: {
+      margin,
+      ref: imgRef,
+      size: { height: imgHeight }
+    }
+  } } = useAppGeometryContext();
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div className="board-container" style={{ marginTop: _margin, minWidth: containerWidth }} ref={containerRef}>
-        <img style={{ height: boardImgHeight }} onLoad={onImgLoad} ref={imgRef} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
-        <div className="pin-overlay">
+      <div ref={containerRef} className="board-container" style={{ margin, minWidth: containerWidth }}>
+        <img ref={imgRef} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+        <div ref={overlayRef} className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 
-              ratio={(imgOriginalDimension.originalWidth && containerWidth) ? (imgWidth / imgOriginalDimension.originalWidth) : 1}
-              pitch={header.pitch}
-              imagePos={imagePos}
               key={`pin-header-${header.name}`} 
               header={header}
             />
