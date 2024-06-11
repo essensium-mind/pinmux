@@ -1,16 +1,18 @@
 {
-  "metadata": [{
-    "id": "bbb",
-    "name": "BeagleBone Black",
-    "image": {
-      "front": "bbb.png",
-      "back": "bbb-back.png"
+  "metadata": [
+    {
+      "id": "bbb",
+      "name": "BeagleBone Black",
+      "image": {
+        "front": "bbb.png",
+        "back": "bbb-back.png"
+      }
+    },
+    {
+      "id": "bbbw",
+      "name": "BeagleBone Black Wireless",
+      "image": "bbbw.png"
     }
-  }, {
-    "id": "bbbw",
-    "name": "BeagleBone Black Wireless",
-    "image": "bbbw.png"
-  }
   ],
   "headers": [
     {
@@ -119,16 +121,8 @@
           "y": 694
         }
       },
-      "contents": [
-        "J1_1",
-        "J1_2",
-        "J1_3",
-        "J1_4",
-        "J1_5",
-        "J1_6"
-      ]
+      "contents": ["J1_1", "J1_2", "J1_3", "J1_4", "J1_5", "J1_6"]
     }
-
   ],
   "pins": {
     "P9_1": "GND",
@@ -241,7 +235,7 @@
         "number": 0,
         "mode": 0
       },
-      "tags": ["gpio","i2c","spi"]
+      "tags": ["gpio", "i2c", "spi"]
     },
     "P9_18": {
       "address": "0x958",
@@ -260,7 +254,7 @@
         "number": 4,
         "mode": 7
       },
-      "tags": ["gpio","i2c","spi"]
+      "tags": ["gpio", "i2c", "spi"]
     },
     "P9_19": {
       "address": "0x97c",
@@ -285,7 +279,7 @@
         "number": 13,
         "mode": 7
       },
-      "tags": ["gpio","i2c","spi","uart"]
+      "tags": ["gpio", "i2c", "spi", "uart"]
     },
     "P9_20": {
       "address": "0x978",
@@ -310,7 +304,7 @@
         "number": 12,
         "mode": 7
       },
-      "tags": ["gpio","i2c","spi","uart"]
+      "tags": ["gpio", "i2c", "spi", "uart"]
     },
     "P9_21": {
       "address": "0x954",
@@ -334,7 +328,7 @@
         "number": 3,
         "mode": 7
       },
-      "tags": ["gpio","i2c","spi","uart"]
+      "tags": ["gpio", "i2c", "spi", "uart"]
     },
     "P9_22": {
       "address": "0x950",
@@ -358,7 +352,7 @@
         "number": 2,
         "mode": 7
       },
-      "tags": ["gpio","i2c","spi","uart"]
+      "tags": ["gpio", "i2c", "spi", "uart"]
     },
     "P9_23": {
       "address": "0x844",
@@ -386,7 +380,7 @@
         "number": 15,
         "mode": 7
       },
-      "tags": ["gpio","i2c","uart"]
+      "tags": ["gpio", "i2c", "uart"]
     },
     "P9_25": {
       "address": "0x9ac",
@@ -414,7 +408,7 @@
         "number": 14,
         "mode": 7
       },
-      "tags": ["gpio","i2c","uart"]
+      "tags": ["gpio", "i2c", "uart"]
     },
     "P9_27": {
       "address": "0x9a4",
@@ -438,7 +432,7 @@
         "number": 0,
         "mode": 3
       },
-      "tags": ["gpio","spi"]
+      "tags": ["gpio", "spi"]
     },
     "P9_29": {
       "address": "0x994",
@@ -452,7 +446,7 @@
         "number": 15,
         "mode": 7
       },
-      "tags": ["gpio","spi"]
+      "tags": ["gpio", "spi"]
     },
     "P9_30": {
       "address": "0x998",
@@ -466,7 +460,7 @@
         "number": 16,
         "mode": 7
       },
-      "tags": ["gpio","spi"]
+      "tags": ["gpio", "spi"]
     },
     "P9_31": {
       "address": "0x990",
@@ -480,7 +474,7 @@
         "number": 14,
         "mode": 7
       },
-      "tags": ["gpio","spi"]
+      "tags": ["gpio", "spi"]
     },
     "P9_32": {
       "name": "VADC",
