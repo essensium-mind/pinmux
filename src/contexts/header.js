@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 
 const SelectedHeaderContext = React.createContext({
   selectedHeader: '',
-  select: (_) => {},
+  select: () => {},
 });
 
 export function useSelectedHeaderContext () {
@@ -11,7 +11,7 @@ export function useSelectedHeaderContext () {
     throw new Error("useSelectedHeaderContext must be used within a SelectedHeaderProvider");
   }
   return context;
-};
+}
 
 export function SelectedHeaderProvider ({ headerInit, children }) {
   const [selectedHeader, setSelectedHeader] = useState(headerInit ? headerInit : '');

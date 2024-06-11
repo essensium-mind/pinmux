@@ -4,7 +4,7 @@ import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
 import './Board.css';
 
-const isSelected = (ctx, id, protocol, _) => {
+const isSelected = (ctx, id, protocol) => {
   return ctx.selectedPins[id] && ctx.selectedPins[id].protocol === protocol;
 };
 

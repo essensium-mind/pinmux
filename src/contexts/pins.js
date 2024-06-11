@@ -3,8 +3,8 @@ import { useBoardContext } from './board.js'
 
 const SelectedPinContext = React.createContext({
   selectedPins: {},
-  select: (_) => {},
-  unselect: (_) => {},
+  select: () => {},
+  unselect: () => {},
   clear: () => {},
 });
 
@@ -14,7 +14,7 @@ export function useSelectedPinContext () {
     throw new Error("useSelectedPinContext must be used within a SelectedPinProvider");
   }
   return context;
-};
+}
 
 export function SelectedPinProvider ({ children }) {
   const [selectedPins, setSelectedPins] = useState({});
@@ -22,11 +22,8 @@ export function SelectedPinProvider ({ children }) {
 
   const clear = () => setSelectedPins({});
 
-  const updateUnselected = (id, protocol, _) => {
+  const updateUnselected = (id) => {
     setSelectedPins({...selectedPins, [id]: undefined });
-    if (protocol !== 'gpio') {
-
-    }
   };
 
   const updateSelected = (id, protocol, details) => {
