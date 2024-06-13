@@ -4,7 +4,7 @@ import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
 import MindLogo from './assets/images/logos/mind_logo.svg';
-import bone from './am335-boneblack.json';
+import bone from './assets/boards/arm/ti/am335-boneblack.json';
 
 import './App.css';
 
