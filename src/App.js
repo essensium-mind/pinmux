@@ -1,4 +1,5 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useEffect } from 'react'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from "react-router-dom";
 import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
@@ -48,6 +49,14 @@ function Header() {
 }
 
 function BoardView() {
+  const { setBoard } = useBoardContext();
+  const params = useParams()
+
+  useEffect(() => {
+    const board = require(`./assets/boards/${params.arch}/${params.vendor}/${params.name}.json`)
+    setBoard(board, params.variant)
+  }, [params, setBoard])
+
   return (
     <>
       <Board/>
@@ -56,25 +65,41 @@ function BoardView() {
   );
 }
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <BoardView/>
-  },
-]);
-
-function App() {
+function RootView() {
   return (
     <BoardProvider boardDefinition={bone}>
       <AppGeometryProvider>
         <SelectedPinProvider>
           <Header/>
           <section className="body">
-            <RouterProvider router={router} />
+            <Outlet/>
           </section>
         </SelectedPinProvider>
       </AppGeometryProvider>
     </BoardProvider>
+  )
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootView/>,
+    children: [
+      {
+        index: true,
+        element: <Navigate replace to="/board/arm/ti/am335-boneblack" />
+      },
+      {
+        path: "board/:arch/:vendor/:name/:variant?",
+        element: <BoardView/>,
+      }
+    ]
+  },
+]);
+
+function App() {
+  return (
+    <RouterProvider router={router} />
   );
 }
 
