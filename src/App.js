@@ -1,12 +1,13 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
-import MindLogo from './assets/images/logos/mind_logo.svg';
 import bone from './assets/boards/arm/ti/am335-boneblack.json';
 
 import './App.css';
+import MindLogo from './assets/images/logos/mind_logo.svg';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
@@ -46,6 +47,22 @@ function Header() {
   );
 }
 
+function BoardView() {
+  return (
+    <>
+      <Board/>
+      <DeviceTreeOutput/>
+    </>
+  );
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <BoardView/>
+  },
+]);
+
 function App() {
   return (
     <BoardProvider boardDefinition={bone}>
@@ -53,8 +70,7 @@ function App() {
         <SelectedPinProvider>
           <Header/>
           <section className="body">
-              <Board/>
-              <DeviceTreeOutput/>
+            <RouterProvider router={router} />
           </section>
         </SelectedPinProvider>
       </AppGeometryProvider>
