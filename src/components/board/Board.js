@@ -186,15 +186,15 @@ export function Board () {
     image: {
       margin,
       loading,
-      ref: imgRef,
-      size: { height: imgHeight }
+      size: { height: imgHeight },
+      onLoad
     }
   } } = useAppGeometryContext();
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
       <div ref={containerRef} className="board-container" style={{ visibility: loading ? 'hidden' : 'visible', margin, minWidth: containerWidth }}>
-        <img ref={imgRef} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+        <img onLoad={onLoad} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
         <div ref={overlayRef} className="pin-overlay">
           {boardHeadersDef.map(header =>
             <Header 

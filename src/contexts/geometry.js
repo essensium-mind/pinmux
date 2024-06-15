@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react'
+import React, { useRef, useContext, useState } from 'react'
 import { useBoardContext } from './board'
 import { useResizeObserver } from '../hooks/resize'
 import { useWindowDimensions } from '../hooks/windows.js';
@@ -171,28 +171,21 @@ const _boardImageGeometryProviderDefault = {
   }
 }
 
-function _boardImageGeometryProvider (ref, windowDimensions, headerSize, containerSize) {
-  if (ref.current === undefined || ref.current.naturalHeight < 1 || ref.current.naturalWidth < 1) {
-    return {
-      ..._boardImageGeometryProviderDefault,
-      ref,
-    }
+function _boardImageGeometryProvider (imgNaturalSize, windowDimensions, headerSize, containerSize) {
+  if (imgNaturalSize.height < 1 || imgNaturalSize.width < 1) {
+    return _boardImageGeometryProviderDefault
   }
 
   const boardMargin = 40
   const boardImgHeight = windowDimensions.height - (headerSize.height + (2 * boardMargin))
-  const ratio = (boardImgHeight / ref.current.naturalHeight)
+  const ratio = (boardImgHeight / imgNaturalSize.height)
 
-  const boardImgWidth = ref.current.naturalWidth * ratio
+  const boardImgWidth = imgNaturalSize.width * ratio
 
   return {
-    ref,
     loading: false,
     margin: boardMargin,
-    original: {
-      width: ref.current.naturalWidth,
-      height: ref.current.naturalHeight,
-    },
+    original: imgNaturalSize,
     size: {
       width: boardImgWidth,
       height: boardImgHeight,
@@ -206,17 +199,17 @@ function _boardImageGeometryProvider (ref, windowDimensions, headerSize, contain
 }
 
 export function AppGeometryProvider ({ children }) {
+  const [imgNaturalSize, setImgNaturalSize] = useState({ width: 0, height: 0 })
   const windowDimensions = useWindowDimensions()
 
   const headerRef = useRef()
   const containerRef = useRef()
-  const imgRef = useRef()
   const overlayRef = useRef()
 
   const boardContainerSize = useResizeObserver(containerRef)
   const headerSize = useResizeObserver(headerRef)
 
-  const boardImageGeometry = _boardImageGeometryProvider(imgRef, windowDimensions, headerSize, boardContainerSize)
+  const boardImageGeometry = _boardImageGeometryProvider(imgNaturalSize, windowDimensions, headerSize, boardContainerSize)
 
   const boardOverlayHeadersGeometry = _boardOverlayHeadersGeometry(overlayRef, boardImageGeometry)
 
@@ -236,7 +229,13 @@ export function AppGeometryProvider ({ children }) {
           ref: overlayRef,
           headers: boardOverlayHeadersGeometry,
         },
-        image: boardImageGeometry,
+        image: {
+          onLoad: ({ target }) => setImgNaturalSize({
+            width: target.naturalWidth,
+            height: target.naturalHeight,
+          }),
+          ...boardImageGeometry,
+        }
       },
     }}>
       {children}
