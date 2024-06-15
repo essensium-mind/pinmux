@@ -1,12 +1,14 @@
+import { useEffect } from 'react'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from "react-router-dom";
 import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
-import MindLogo from './assets/images/logos/mind_logo.svg';
 import bone from './assets/boards/arm/ti/am335-boneblack.json';
 
 import './App.css';
+import MindLogo from './assets/images/logos/mind_logo.svg';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
@@ -46,19 +48,58 @@ function Header() {
   );
 }
 
-function App() {
+function BoardView() {
+  const { setBoard } = useBoardContext();
+  const params = useParams()
+
+  useEffect(() => {
+    const board = require(`./assets/boards/${params.arch}/${params.vendor}/${params.name}.json`)
+    setBoard(board, params.variant)
+  }, [params, setBoard])
+
+  return (
+    <>
+      <Board/>
+      <DeviceTreeOutput/>
+    </>
+  );
+}
+
+function RootView() {
   return (
     <BoardProvider boardDefinition={bone}>
       <AppGeometryProvider>
         <SelectedPinProvider>
           <Header/>
           <section className="body">
-              <Board/>
-              <DeviceTreeOutput/>
+            <Outlet/>
           </section>
         </SelectedPinProvider>
       </AppGeometryProvider>
     </BoardProvider>
+  )
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootView/>,
+    children: [
+      {
+        index: true,
+        element: <Navigate replace to="/board/arm/ti/am335-boneblack" />
+      },
+      {
+        path: "board/:arch/:vendor/:name/:variant?",
+        element: <BoardView/>,
+      }
+    ]
+  },
+]);
+
+function App() {
+  return (
+    <RouterProvider router={router} />
   );
 }
 
