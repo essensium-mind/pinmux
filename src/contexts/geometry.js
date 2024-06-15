@@ -107,7 +107,7 @@ const _boardOverlayHeadersGeometryDefault = {
 function _boardOverlayHeadersGeometry (ref, boardImg) {
   const { headers } = useBoardContext()
 
-  if (ref.current === undefined) {
+  if (ref.current === undefined || boardImg.loading) {
     return headers.reduce((obj, x) => ({
       ...obj,
       [x.name]: _boardOverlayHeadersGeometryDefault
@@ -155,6 +155,7 @@ function _boardOverlayHeadersGeometry (ref, boardImg) {
 
 const _boardImageGeometryProviderDefault = {
   ref: undefined,
+  loading: true,
   original: {
     width: 0,
     height: 0
@@ -171,7 +172,7 @@ const _boardImageGeometryProviderDefault = {
 }
 
 function _boardImageGeometryProvider (ref, windowDimensions, headerSize, containerSize) {
-  if (ref.current === undefined) {
+  if (ref.current === undefined || ref.current.naturalHeight < 1 || ref.current.naturalWidth < 1) {
     return {
       ..._boardImageGeometryProviderDefault,
       ref,
@@ -180,16 +181,17 @@ function _boardImageGeometryProvider (ref, windowDimensions, headerSize, contain
 
   const boardMargin = 40
   const boardImgHeight = windowDimensions.height - (headerSize.height + (2 * boardMargin))
-  const ratio = (ref.current.naturalHeight > 1) ? (boardImgHeight / ref.current.naturalHeight) : 1
+  const ratio = (boardImgHeight / ref.current.naturalHeight)
 
   const boardImgWidth = ref.current.naturalWidth * ratio
 
   return {
     ref,
+    loading: false,
     margin: boardMargin,
     original: {
-      width: ref.current ? ref.current.naturalWidth : 0,
-      height: ref.current ? ref.current.naturalHeight: 0,
+      width: ref.current.naturalWidth,
+      height: ref.current.naturalHeight,
     },
     size: {
       width: boardImgWidth,

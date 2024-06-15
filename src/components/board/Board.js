@@ -91,7 +91,9 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
 
 function Header({ header }) {
   const { select, selectedHeader } = useSelectedHeaderContext()
-  const shown = selectedHeader === header.name;
+  const { board: { image: { loading } } } = useAppGeometryContext()
+
+  const shown = (selectedHeader === header.name) && !loading;
 
   const { board: {
     overlay: {
@@ -183,6 +185,7 @@ export function Board () {
     },
     image: {
       margin,
+      loading,
       ref: imgRef,
       size: { height: imgHeight }
     }
@@ -190,7 +193,7 @@ export function Board () {
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div ref={containerRef} className="board-container" style={{ margin, minWidth: containerWidth }}>
+      <div ref={containerRef} className="board-container" style={{ visibility: loading ? 'hidden' : 'visible', margin, minWidth: containerWidth }}>
         <img ref={imgRef} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
         <div ref={overlayRef} className="pin-overlay">
           {boardHeadersDef.map(header =>
