@@ -5,6 +5,7 @@ import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
+import { PrimaryButton } from './components/button'
 import bone from './assets/boards/arm/ti/am335-boneblack.json';
 
 import './App.css';
@@ -21,9 +22,9 @@ function ClearButton() {
   const { clear } = useSelectedPinContext();
 
   return (
-    <button className="reload-button" onClick={clear}>
+    <PrimaryButton inverted onClick={clear}>
       <FontAwesomeIcon icon="fa-solid fa-rotate-right" />
-    </button>
+    </PrimaryButton>
   );
 }
 

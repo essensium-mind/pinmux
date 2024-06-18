@@ -35,22 +35,6 @@
   }
 }
 
-.reload-button {
-  background-color: transparent;
-  padding: 8px;
-  border: 2px solid white;
-  border-radius: 4px;
-  user-select: none;
-  cursor: pointer;
-
-  color: white;
-}
-
-.reload-button:hover {
-  color: orange;
-  border-color: orange;
-}
-
 .body {
   display: flex;
   width: 100%;
