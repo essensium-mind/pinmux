@@ -56,7 +56,7 @@ function BoardView() {
   useEffect(() => {
     const board = require(`./assets/boards/${params.arch}/${params.vendor}/${params.name}.json`)
     setBoard(board, params.variant)
-  }, [params, setBoard])
+  }, [params])
 
   return (
     <>
