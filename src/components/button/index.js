@@ -19,3 +19,19 @@ export function PrimaryButton({ children, inverted, ...props }) {
     </button>
   );
 }
+
+export function LinkButton({ children, inverted, ...props }) {
+  const style = {
+    padding: '4px',
+    backgroundColor: 'transparent',
+    color: inverted ? 'white' : 'black',
+    userSelect: 'none',
+    cursor: 'pointer',
+  }
+
+  return (
+    <button style={style} {...props}>
+      {children}
+    </button>
+  );
+}
