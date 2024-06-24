@@ -104,10 +104,13 @@ const _boardOverlayHeadersGeometryDefault = {
   }
 }
 
-function _boardOverlayHeadersGeometry (ref, boardImg) {
-  const { headers } = useBoardContext()
-
-  if (ref.current === undefined || boardImg.loading) {
+function _boardOverlayHeadersGeometry (ref, headers, boardImg) {
+  if (headers.length === 0 || ref.current === undefined || Array.from(ref.current.children).length === 0 || boardImg.loading) {
+    /**
+     * The tricky thing with the Header Geometry computation is that we must
+     * pass a default dumb state to start the computation of the sizing before
+     * placing it correctly
+     */
     return headers.reduce((obj, x) => ({
       ...obj,
       [x.name]: _boardOverlayHeadersGeometryDefault
@@ -211,7 +214,8 @@ export function AppGeometryProvider ({ children }) {
 
   const boardImageGeometry = _boardImageGeometryProvider(imgNaturalSize, windowDimensions, headerSize, boardContainerSize)
 
-  const boardOverlayHeadersGeometry = _boardOverlayHeadersGeometry(overlayRef, boardImageGeometry)
+  const { headers } = useBoardContext()
+  const boardOverlayHeadersGeometry = _boardOverlayHeadersGeometry(overlayRef, headers, boardImageGeometry)
 
   return (
     <AppGeometryContext.Provider value={{
