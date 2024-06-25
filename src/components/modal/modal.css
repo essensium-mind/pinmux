@@ -1,0 +1,41 @@
+.modal::backdrop {
+  background: hsl(0 0% 0% / 50%);
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: row;
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid;
+}
+
+.modal-header button {
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.modal-header .modal-title {
+  font-size: large;
+  font-weight: 600;
+  text-align: left;
+}
+
+.modal-dialog {
+  border-radius: 0.5rem;
+  padding: 0rem;
+  box-shadow: hsl(0 0% 0% / 10%) 0 0 0.5rem 0.25rem;
+  border: 1px solid #ccc;
+}
+
+.modal-content {
+  display: flex;
+  position: relative;
+  padding: 0.8rem;
+  flex-direction: column;
+
+  font-size: small;
+}
