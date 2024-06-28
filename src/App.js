@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useRef, useLayoutEffect } from 'react'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from "react-router-dom";
 import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
@@ -50,20 +50,26 @@ function Header() {
 }
 
 function BoardView() {
-  const { setBoard } = useBoardContext();
+  const board = useBoardContext()
+  const { setBoard } = board
+  const { onBoardDefinitionChange } = useAppGeometryContext()
   const params = useParams()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const board = require(`./assets/boards/${params.arch}/${params.vendor}/${params.name}.json`)
     setBoard(board, params.variant)
   }, [params])
+
+  useLayoutEffect(() => {
+    onBoardDefinitionChange(board)
+  }, [board])
 
   return (
     <>
       <Board/>
       <DeviceTreeOutput/>
     </>
-  );
+  )
 }
 
 function RootView() {
