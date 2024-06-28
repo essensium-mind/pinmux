@@ -1,7 +1,10 @@
+import { useRef, useLayoutEffect } from 'react';
 import { useBoardContext } from '../../contexts/board.js'
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
+import { useResizeObserver } from '../../hooks/resize.js';
+
 import './Board.css';
 
 const isSelected = (ctx, id, protocol) => {
@@ -89,27 +92,20 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
   }
 }
 
-function Header({ header }) {
+function Header({ header, pins, pos }) {
   const { select, selectedHeader } = useSelectedHeaderContext()
-  const { board: { image: { loading } } } = useAppGeometryContext()
+  const { board: { image: { loading } }, onOverlayHeaderResize } = useAppGeometryContext()
+
+  const headerRef = useRef();
+  const pinRef = useRef();
+  const { width: hWidth, height: hHeight } = useResizeObserver(pinRef)
+  useLayoutEffect(() => {
+    if (pinRef.current && headerRef.current) {
+      onOverlayHeaderResize(headerRef.current)
+    }
+  }, [hWidth, hHeight, pinRef, headerRef])
 
   const shown = (selectedHeader === header.name) && !loading;
-
-  const { board: {
-    overlay: {
-      headers: headersGeometry
-    },
-  } } = useAppGeometryContext();
-
-  const {
-    pins: {
-      pitch,
-      pos: pinsPos,
-    },
-    header: {
-      pos: headerPos,
-    }
-  } = headersGeometry[header.name];
 
   // FIXME Only vertical header are supported so far.
   const headerLength = header.contents.length;
@@ -121,14 +117,14 @@ function Header({ header }) {
   // The following variable are computed based on a visual representation
   // I found pleasing and does not follow any guidelines.
   const _borderPixelGrow = 1; // How much bigger in pixel the border is relative to innerSize
-  const _pinSize = (Math.floor(pitch) - (2 * _borderPixelGrow)) / 3;
+  const _pinSize = (Math.floor(pins.pitch) - (2 * _borderPixelGrow)) / 3;
   const innerSize = Math.floor(_pinSize) + Math.round((_pinSize - Math.floor(_pinSize)) * 3);
   const borderSize = Math.floor(_pinSize + _borderPixelGrow);
 
   // Based on the rounded header pixel height, compute how many pixels we have
   // to compensate to match the representation of the header in the image.
   const _headerRepresentationTotalHeight = innerSize + (2 * borderSize);
-  const missingPixels = Math.round(pitch * headerLength) - (_headerRepresentationTotalHeight * headerLength)
+  const missingPixels = Math.round(pins.pitch * headerLength) - (_headerRepresentationTotalHeight * headerLength)
 
   // Create an evenly distribution of the offsets.
   const offsetIndex = (missingPixels < (headerLength / 2)) ?
@@ -146,21 +142,23 @@ function Header({ header }) {
       }}
       className="header-connector"
       id={header.name}
+      ref={headerRef}
     >
       <div 
         style={{
           position: 'absolute',
-          ...headerPos,
+          ...pos,
         }} 
         className={`pin-header-title pin-header-title-${shown ? 'selected' : 'hidden'}`}
       >
         <span onClick={() => select(header.name)}>{header.name}</span>
       </div>
       <table
+        ref={pinRef}
         style={{
           position: 'absolute',
           zIndex: shown ? 10 : 5,
-          ...pinsPos,
+          ...pins.pos,
         }}
       >
         <tbody>
@@ -174,34 +172,52 @@ function Header({ header }) {
 }
 
 export function Board () {
-  const { name: boardName, image: boardImage, headers: boardHeadersDef } = useBoardContext()
-  const { board: {
-    container: { 
-      ref: containerRef,
-      size: { width: containerWidth }
+  const board = useBoardContext()
+  const { name: boardName, image: boardImage, headers: boardHeadersDef } = board
+  const {
+    board: {
+      container: {
+        size: cSize,
+      },
+      overlay: {
+        headers: headersGeometry,
+      },
+      image: {
+        margin,
+        loading,
+        size: { height: imgHeight },
+      }
     },
-    overlay: {
-      ref: overlayRef
-    },
-    image: {
-      margin,
-      loading,
-      size: { height: imgHeight },
-      onLoad
+    onImgLoad,
+    onContainerResize,
+  } = useAppGeometryContext();
+
+  const containerRef = useRef()
+  const { width: cWidth, height: cHeight } = useResizeObserver(containerRef)
+
+  useLayoutEffect(() => {
+    if (cSize.width !== cWidth || cSize.height !== cHeight) {
+      onContainerResize({ width: cWidth, height: cHeight })
     }
-  } } = useAppGeometryContext();
+  }, [cWidth, cHeight])
+
+  const headers = (boardHeadersDef.every(h => headersGeometry[h.name])) ?
+      boardHeadersDef.map(header => {
+        return (
+          <Header
+            pins={headersGeometry[header.name].pins}
+            pos={headersGeometry[header.name].header.pos}
+            key={`pin-header-${header.name}`}
+            header={header}
+          />
+      )}) : []
 
   return (
     <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div ref={containerRef} className="board-container" style={{ visibility: loading ? 'hidden' : 'visible', margin, minWidth: containerWidth }}>
-        <img onLoad={onLoad} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
-        <div ref={overlayRef} className="pin-overlay">
-          {boardHeadersDef.map(header =>
-            <Header 
-              key={`pin-header-${header.name}`} 
-              header={header}
-            />
-          )}
+      <div ref={containerRef} className="board-container" style={{ visibility: loading ? 'hidden' : 'visible', margin, minWidth: cSize.width }}>
+        <img onLoad={({ target }) => onImgLoad({ width: target.naturalWidth, height: target.naturalHeight })} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
+        <div className="pin-overlay">
+          {headers}
         </div>
       </div>
     </SelectedHeaderProvider>
