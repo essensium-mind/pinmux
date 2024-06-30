@@ -1,8 +1,7 @@
-import { useRef, useLayoutEffect } from 'react';
-import { useBoardContext } from '../../contexts/board.js'
+import { useRef, useEffect, useLayoutEffect } from 'react';
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useAppGeometryContext } from '../../contexts/geometry.js'
-import { useSelectedHeaderContext, SelectedHeaderProvider } from '../../contexts/header.js';
+import { useSelectedHeaderContext } from '../../contexts/header.js';
 import { useResizeObserver } from '../../hooks/resize.js';
 
 import './Board.css';
@@ -56,7 +55,7 @@ const Legend = ({ align, desc, id, maxHeight, shown, }) => (
 );
 
 function Pin({ offset, innerSize, borderSize, pin, shown }) {
-  const { pins: boardPinsDef } = useBoardContext()
+  const { board: { definition: { pins: boardPinsDef } } } = useAppGeometryContext()
   const UnwrappedPin = ({ shown, id, justify }) => {
     const desc = (align) => (boardPinsDef[id] ? (
       <Legend maxHeight={innerSize + 2 * borderSize} shown={shown} id={id} align={align} desc={boardPinsDef[id]}/>) : (
@@ -172,25 +171,29 @@ function Header({ header, pins, pos }) {
 }
 
 export function Board () {
-  const board = useBoardContext()
-  const { name: boardName, image: boardImage, headers: boardHeadersDef } = board
   const {
     board: {
+      metadata: {
+        name,
+      },
       container: {
         size: cSize,
       },
       overlay: {
-        headers: headersGeometry,
+        headers,
       },
       image: {
+        src,
         margin,
         loading,
         size: { height: imgHeight },
-      }
+      },
+      side,
     },
     onImgLoad,
     onContainerResize,
-  } = useAppGeometryContext();
+  } = useAppGeometryContext()
+  const { selectedHeader, select } = useSelectedHeaderContext()
 
   const containerRef = useRef()
   const { width: cWidth, height: cHeight } = useResizeObserver(containerRef)
@@ -201,25 +204,33 @@ export function Board () {
     }
   }, [cWidth, cHeight])
 
-  const headers = (boardHeadersDef.every(h => headersGeometry[h.name])) ?
-      boardHeadersDef.map(header => {
-        return (
-          <Header
-            pins={headersGeometry[header.name].pins}
-            pos={headersGeometry[header.name].header.pos}
-            key={`pin-header-${header.name}`}
-            header={header}
-          />
-      )}) : []
+  useEffect(() => {
+    if (Object.values(headers).length) {
+      const newHeader = Object.values(headers)[0].id
+      if (newHeader != selectedHeader) {
+        select(newHeader)
+      }
+    } else {
+      select('')
+    }
+  }, [name, side])
 
   return (
-    <SelectedHeaderProvider headerInit={boardHeadersDef.length ? boardHeadersDef[0].name : ''}>
-      <div ref={containerRef} className="board-container" style={{ visibility: loading ? 'hidden' : 'visible', margin, minWidth: cSize.width }}>
-        <img onLoad={({ target }) => onImgLoad({ width: target.naturalWidth, height: target.naturalHeight })} style={{ height: imgHeight }} src={require(`../../assets/images/${boardImage}`)} alt={boardName}/>
-        <div className="pin-overlay">
-          {headers}
-        </div>
+    <div ref={containerRef} className="board-container" style={{ visibility: loading ? 'hidden' : 'visible', margin, minWidth: cSize.width }}>
+      <img onLoad={({ target }) => onImgLoad({ width: target.naturalWidth, height: target.naturalHeight })} style={{ height: imgHeight }} src={src && require(`../../assets/images/${src}`)} alt={name}/>
+      <div className="pin-overlay">
+        {
+          !loading && Object.values(headers).map(header => {
+            return (
+              <Header
+                pins={header.pins}
+                pos={header.header.pos}
+                key={`pin-header-${header.id}`}
+                header={header.definition}
+              />
+          )})
+        }
       </div>
-    </SelectedHeaderProvider>
+    </div>
   );
 }

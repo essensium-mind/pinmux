@@ -13,10 +13,10 @@ export function useSelectedHeaderContext () {
   return context;
 }
 
-export function SelectedHeaderProvider ({ headerInit, children }) {
-  const [selectedHeader, setSelectedHeader] = useState(headerInit ? headerInit : '');
+export function SelectedHeaderProvider ({ children }) {
+  const [selectedHeader, setSelectedHeader] = useState('');
 
-  const selectFunc = (name) => {
+  const select = (name) => {
     if (name === selectedHeader) {
       return setSelectedHeader('');
     } else {
@@ -25,7 +25,7 @@ export function SelectedHeaderProvider ({ headerInit, children }) {
   }
 
   return (
-    <SelectedHeaderContext.Provider value={{ selectedHeader: selectedHeader, select: selectFunc }}>
+    <SelectedHeaderContext.Provider value={{ selectedHeader, select }}>
       {children}
     </SelectedHeaderContext.Provider>
   );
