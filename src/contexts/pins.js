@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { useBoardContext } from './board.js'
+import { useAppGeometryContext } from './geometry.js';
 
 const SelectedPinContext = React.createContext({
   selectedPins: {},
@@ -18,7 +18,7 @@ export function useSelectedPinContext () {
 
 export function SelectedPinProvider ({ children }) {
   const [selectedPins, setSelectedPins] = useState({});
-  const { pins } = useBoardContext()
+  const { board: { definition: { pins } } } = useAppGeometryContext()
 
   const clear = () => setSelectedPins({});
 

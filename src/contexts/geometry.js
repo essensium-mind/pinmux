@@ -15,6 +15,7 @@ const _appGeometryDefault = {
     definition: {
       headers: []
     },
+    metadata: {},
     headers: {},
     container: {
       /**
@@ -56,7 +57,8 @@ const _appGeometryDefault = {
       pos: {
         top: 0,
         left: 0,
-      }
+      },
+      src: '',
     },
     overlay: {
       headers: []
@@ -79,6 +81,7 @@ export function useAppGeometryContext () {
 const _boardOverlayHeaderGeometryDefault = {
   id: undefined,
   ref: undefined,
+  definition: [],
   header: {
     size: {
       width: 0,
@@ -103,8 +106,70 @@ const _boardOverlayHeaderGeometryDefault = {
   }
 }
 
-function _boardOverlayHeaderGeometry (ref, headers, boardImg) {
-  const { position: headerOriginalPosition, pitch: headerOriginalPitch } = headers.find(h => h.name === ref.id)
+function _getBoardMetadata(board, variant) {
+  if (Array.isArray(board.metadata)) {
+    if (variant === undefined) {
+      return board.metadata.find(Boolean)
+    }
+
+    return board.metadata.find(x => x.id === variant)
+  } else {
+    return board.metadata
+  }
+}
+
+function _filterHeaders (board, metadata, side) {
+  return board.headers.map(h => {
+    if (h["side"] !== undefined && h["side"] !== side) {
+      return undefined
+    }
+    if (typeof h.pitch === "object"
+      && h.pitch[metadata.id] !== undefined
+      && h.position[metadata.id] !== undefined
+    ) {
+      return {
+        ...h,
+        pitch: h.pitch[metadata.id],
+        position: h.position[metadata.id]
+      }
+    } else if (!Array.isArray(board.metadata)) {
+      // Single board variant definition
+      return h
+    } else {
+      // Multiple board variant definition and no definitions for the headers.
+      // TODO Throw error
+      return undefined
+    }
+  }).filter(x => x !== undefined)
+}
+
+function _boardHasSide (metadata, side) {
+  return typeof metadata.image === "object" && metadata.image[side]
+}
+
+function _getBoardImage (metadata, side) {
+  return _boardHasSide(metadata, side)
+    ? metadata.image[side]
+    : metadata.image
+
+}
+
+function _getBoardVariant (board) {
+  if (Array.isArray(board.metadata)) {
+    return board.metadata.map(({ id, name }) => ({
+      id,
+      name
+    }))
+  } else {
+    return {
+      id: board.metadata.id,
+      name: board.metadata.name
+    }
+  }
+}
+
+function _boardOverlayHeaderGeometry (ref, definition, boardImg) {
+  const { position: headerOriginalPosition, pitch: headerOriginalPitch } = definition
   const pinHeaderLabel = ref.firstChild // div -> span
   const pinHeader = ref.lastChild.firstChild // div -> table -> tbody 
 
@@ -136,32 +201,34 @@ function _boardOverlayHeaderGeometry (ref, headers, boardImg) {
       // TODO Move header contents here to already do the size calculation here.
       // rows: Array.from(pinHeader.children).map(x => x.offsetHeight),
       // columns: Array.from(pinHeader.firstChild.children).map(x => x.offsetWidth),
-    }
+    },
+    definition,
   }
 
 }
 
 function _boardOverlayHeadersGeometry (previousState, headersDefinitions, boardImg) {
-  if (headersDefinitions.length === 0 || boardImg.loading) {
+  // if (headersDefinitions.length === 0 || boardImg.loading) {
     /**
      * The tricky thing with the Header Geometry computation is that we must
      * pass a default dumb state to start the computation of the sizing before
      * placing it correctly
      */
-    return {}
-  }
+    // return {}
+  // }
 
   return headersDefinitions.reduce((obj, x) => {
     if (previousState[x.name] && previousState[x.name].ref) {
       return {
         ...obj,
-        [x.name]: _boardOverlayHeaderGeometry(previousState[x.name].ref, headersDefinitions, boardImg)
+        [x.name]: _boardOverlayHeaderGeometry(previousState[x.name].ref, x, boardImg)
       }
     } else {
       return {
         ...obj,
         [x.name]: {
           ..._boardOverlayHeaderGeometryDefault,
+          definition: x, // TODO More detail could be added directly
           id: x.name,
         }
       }
@@ -170,7 +237,6 @@ function _boardOverlayHeadersGeometry (previousState, headersDefinitions, boardI
 }
 
 const _boardImageGeometryProviderDefault = {
-  ref: undefined,
   loading: true,
   original: {
     width: 0,
@@ -219,6 +285,8 @@ const GEOMETRY_IMG_LOADED = "GeometryContextBoardImgLoaded"
 const GEOMETRY_BOARD_CONTAINER_RESIZE = "GeometryContextBoardContainerResize"
 const GEOMETRY_BOARD_HEADER_OVERLAY_RESIZE = "GeometryContextBoardHeaderOverlayResize"
 const GEOMETRY_BOARD_DEFINITION_CHANGE = "GeometryContextBoardDefinitionChange"
+const BOARD_CONTEXT_FLIP_BOARD = 'BoardContextFlipBoard'
+const BOARD_CONTEXT_CHANGE_BOARD_VARIANT = 'BoardContextChangeBoardVariant'
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
@@ -234,7 +302,7 @@ function reducer(state, action) {
     case GEOMETRY_WINDOW_HEADER_RESIZE: {
       const browserWindow = getWindowDimensions()
       const image = _boardImageGeometryProvider(state.board.image.original, browserWindow, action.data, state.board.container.size)
-      const headers = _boardOverlayHeadersGeometry(state.board.overlay.headers, state.board.definition.headers, image)
+      const headers = _boardOverlayHeadersGeometry(state.board.overlay.headers, _filterHeaders(state.board.definition, state.board.metadata, state.board.side), image)
       return {
         ...state,
         browserWindow,
@@ -244,7 +312,10 @@ function reducer(state, action) {
         },
         board: {
           ...state.board,
-          image,
+          image: {
+            ...state.board.image,
+            ...image,
+          },
           overlay: {
             ...state.board.overlay,
             headers,
@@ -252,31 +323,113 @@ function reducer(state, action) {
         }
       }
     }
+    //   const definition = action.data
+    //   const image = _boardImageGeometryProvider(state.board.image.original, state.browserWindow, state.header.size, state.board.container.size)
+    //   const headers = _boardOverlayHeadersGeometry({}, definition.headers, image)
+    //   return {
+    //     ...state,
+    //     board: {
+    //       ...state.board,
+    //       definition,
+    //       image,
+    //       overlay: {
+    //         ...state.board.overlay,
+    //         headers,
+    //       }
+    //     }
+    //   }
+    // }
+    // case BOARD_CONTEXT_CHANGE_BOARD_DEFINITION: {
     case GEOMETRY_BOARD_DEFINITION_CHANGE: {
-      const definition = action.data
-      const image = _boardImageGeometryProvider(state.board.image.original, state.browserWindow, state.header.size, state.board.container.size)
-      const headers = _boardOverlayHeadersGeometry({}, definition.headers, image)
-      return {
-        ...state,
-        board: {
-          ...state.board,
-          definition,
-          image,
-          overlay: {
-            ...state.board.overlay,
-            headers,
+      const metadata = _getBoardMetadata(action.data.board, action.data.variant)
+      const side = 'front'
+
+      if (JSON.stringify(metadata) !== JSON.stringify(state.board.metadata)) {
+        return {
+          ...state,
+          board: {
+            ...state.board,
+            definition: action.data.board,
+            metadata,
+            overlay: {
+              ...state.board.overlay,
+              headers: _boardOverlayHeadersGeometry({}, _filterHeaders(action.data.board, metadata, side), undefined) // TODO Apply default geometry
+            },
+            variants: _getBoardVariant(action.data.board),
+            image: {
+              ...state.board.image,
+              ..._boardImageGeometryProviderDefault,
+              src: _getBoardImage(metadata, side),
+            },
+            side,
           }
         }
+      } else {
+        return state
+      }
+    }
+    case BOARD_CONTEXT_FLIP_BOARD: {
+      const newSide = state.board.side === 'front' ? 'back' : 'front'
+
+      if (_boardHasSide(state.board.metadata, newSide)) {
+        return {
+          ...state,
+          board: {
+            ...state.board,
+            overlay: {
+              ...state.board.overlay,
+              headers: _boardOverlayHeadersGeometry({}, _filterHeaders(state.board.definition, state.board.metadata, newSide), undefined)
+            },
+            image: {
+              ...state.board.image,
+              ..._boardImageGeometryProviderDefault,
+              src: _getBoardImage(state.board.metadata, newSide),
+            },
+            side: newSide,
+          }
+        }
+      } else {
+        return state
+      }
+    }
+    case BOARD_CONTEXT_CHANGE_BOARD_VARIANT: {
+      const metadata = _getBoardMetadata(state.board.definition, action.data)
+      const side = 'front'
+
+      if (JSON.stringify(metadata) !== JSON.stringify(state.board.metadata)) {
+        return {
+          ...state,
+          board: {
+            ...state.board,
+            metadata,
+            overlay: {
+              ...state.board.overlay,
+              headers: _boardOverlayHeadersGeometry({}, _filterHeaders(state.board.definition, metadata, side), undefined) // TODO Apply default geometry
+            },
+            variants: _getBoardVariant(action.data.board),
+            image: {
+              ...state.board.image,
+              ..._boardImageGeometryProviderDefault,
+              src: _getBoardImage(metadata, side),
+            },
+            side,
+          }
+        }
+      } else {
+        return state
       }
     }
     case GEOMETRY_IMG_LOADED: {
       const image = _boardImageGeometryProvider(action.data, state.browserWindow, state.header.size, state.board.container.size)
-      const headers = _boardOverlayHeadersGeometry(state.board.overlay.headers, state.board.definition.headers, image)
+      const headers = _boardOverlayHeadersGeometry(state.board.overlay.headers, _filterHeaders(state.board.definition, state.board.metadata, state.board.side), image)
       return {
         ...state,
         board: {
           ...state.board,
-          image,
+          image: {
+            ...state.board.image,
+            ...image,
+          },
           overlay: {
             ...state.board.overlay,
             headers,
@@ -287,7 +440,7 @@ function reducer(state, action) {
     case GEOMETRY_BOARD_CONTAINER_RESIZE: {
       const browserWindow = getWindowDimensions()
       const image = _boardImageGeometryProvider(state.board.image.original, browserWindow, state.header.size, action.data)
-      const headers = _boardOverlayHeadersGeometry(state.board.overlay.headers, state.board.definition.headers || [], image)
+      const headers = _boardOverlayHeadersGeometry(state.board.overlay.headers, _filterHeaders(state.board.definition, state.board.metadata, state.board.side), image)
       return {
         ...state,
         browserWindow,
@@ -297,7 +450,10 @@ function reducer(state, action) {
             ...state.board.container,
             size: action.data,
           },
-          image,
+          image: {
+            ...state.board.image,
+            ...image,
+          },
           overlay: {
             ...state.board.overlay,
             headers,
@@ -306,13 +462,15 @@ function reducer(state, action) {
       }
     }
     case GEOMETRY_BOARD_HEADER_OVERLAY_RESIZE: {
+      if (state.board.image.loading) {
+        return state
+      }
       const ref = action.data
-      const definition = state.board.definition.headers
+      const definition = state.board.overlay.headers[ref.id].definition
       const headers = {
         ...state.board.overlay.headers,
         [ref.id]: _boardOverlayHeaderGeometry(ref, definition, state.board.image),
       }
-      console.log(state, headers);
       return {
         ...state,
         board: {
@@ -348,12 +506,12 @@ export function AppGeometryProvider ({ children }) {
     })
   ), [])
 
-  const onBoardDefinitionChange = useMemo(() => (
-    (definition) => dispatch({
-      type: GEOMETRY_BOARD_DEFINITION_CHANGE,
-      data: definition,
-    })
-  ), [])
+  // const onBoardDefinitionChange = useMemo(() => (
+  //   (definition) => dispatch({
+  //     type: GEOMETRY_BOARD_DEFINITION_CHANGE,
+  //     data: definition,
+  //   })
+  // ), [])
 
   const onImgLoad = useMemo(() => (
     (size) => dispatch({
@@ -369,6 +527,26 @@ export function AppGeometryProvider ({ children }) {
     })
   ), [])
 
+  const flipSide = useMemo(() => (
+    () => dispatch({
+      type: BOARD_CONTEXT_FLIP_BOARD,
+    })
+  ), [])
+
+  const setVariant = useMemo(() => (
+    (variant) => dispatch({
+      type: BOARD_CONTEXT_CHANGE_BOARD_VARIANT,
+      data: variant,
+    })
+  ), [])
+
+  const onBoardDefinitionChange = useMemo(() => (
+    (board, variant) => dispatch({
+      type: GEOMETRY_BOARD_DEFINITION_CHANGE,
+      data: { board, variant },
+    })
+  ), [])
+
   return (
     <AppGeometryContext.Provider value={{
       ...state,
@@ -377,6 +555,9 @@ export function AppGeometryProvider ({ children }) {
       onHeaderResize,
       onImgLoad,
       onOverlayHeaderResize,
+      flipSide,
+      setVariant,
+      // setBoard,
     }}>
       {children}
     </AppGeometryContext.Provider>

@@ -1,9 +1,9 @@
-import { useBoardContext } from '../../contexts/board.js'
+import { useAppGeometryContext } from '../../contexts/geometry.js';
 import { useSelectedPinContext } from '../../contexts/pins.js';
 import './DeviceTree.css';
 
 export function DeviceTreeOutput() {
-  const { pins: boardPinsDef } = useBoardContext();
+  const { board: { definition: { pins: boardPinsDef } } } = useAppGeometryContext()
   const { selectedPins } = useSelectedPinContext();
 
   const separateBusses = (pins, busName) => (
