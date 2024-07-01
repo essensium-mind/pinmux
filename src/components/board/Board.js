@@ -97,12 +97,12 @@ function Header({ header, pins, pos }) {
 
   const headerRef = useRef();
   const pinRef = useRef();
-  const { width: hWidth, height: hHeight } = useResizeObserver(pinRef)
+  const hSize = useResizeObserver(pinRef)
   useLayoutEffect(() => {
     if (pinRef.current && headerRef.current) {
       onOverlayHeaderResize(headerRef.current)
     }
-  }, [hWidth, hHeight, pinRef, headerRef])
+  }, [hSize, pinRef, headerRef])
 
   const shown = (selectedHeader === header.name) && !loading;
 
@@ -196,13 +196,13 @@ export function Board () {
   const { selectedHeader, select } = useSelectedHeaderContext()
 
   const containerRef = useRef()
-  const { width: cWidth, height: cHeight } = useResizeObserver(containerRef)
+  const _cSize = useResizeObserver(containerRef)
 
   useLayoutEffect(() => {
-    if (cSize.width !== cWidth || cSize.height !== cHeight) {
-      onContainerResize({ width: cWidth, height: cHeight })
+    if (cSize.width !== _cSize.width || cSize.height !== _cSize.height) {
+      onContainerResize(_cSize)
     }
-  }, [cWidth, cHeight])
+  }, [_cSize])
 
   useEffect(() => {
     if (Object.values(headers).length) {

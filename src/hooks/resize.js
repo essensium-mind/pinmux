@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export function useResizeObserver (ref) {
-  const [width, setWidth] = useState(ref.current ? ref.current.offsetWidth : 0);
-  const [height, setHeight] = useState(ref.current ? ref.current.offsetHeight : 0);
+  const [width, setWidth] = useState(ref.current ? ref.current.offsetWidth : 0)
+  const [height, setHeight] = useState(ref.current ? ref.current.offsetHeight : 0)
 
   // FIXME Have to force setting the state outside of the observer to verify it
   // on useResizeObserver call.
@@ -22,7 +22,7 @@ export function useResizeObserver (ref) {
 
   useEffect(() => {
     if (!ref.current) {
-      return;
+      return
     }
 
     const resizeObserver = new ResizeObserver(() => {
@@ -33,14 +33,19 @@ export function useResizeObserver (ref) {
       if(ref.current.offsetHeight !== height) {
         setHeight(ref.current.offsetHeight)
       }
-    });
+    })
     
     resizeObserver.observe(ref.current);
 
     return function cleanup() {
-      resizeObserver.disconnect();
+      resizeObserver.disconnect()
     }
-  }, [ref, width, height]);
+  }, [ref, width, height])
 
-  return { width, height };
+  const ret = useMemo(() => ({
+    width,
+    height,
+  }), [width, height])
+
+  return ret
 }
