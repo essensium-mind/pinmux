@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from
 import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
+import { useResizeObserver } from './hooks/resize.js';
 import { SelectedHeaderProvider } from './contexts/header.js'
 import { Board } from './components/board/Board.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
@@ -35,12 +36,12 @@ function Header() {
   const params = useParams()
 
   const ref = useRef()
-  const { width: hWidth, height: hHeight } = useResizeObserver(ref)
+  const hSize = useResizeObserver(ref)
   useLayoutEffect(() => {
-    if (size.width !== hWidth || size.height !== hHeight) {
-      onHeaderResize({ width: hWidth, height: hHeight })
+    if (size.width !== hSize.width || size.height !== hSize.height) {
+      onHeaderResize(hSize)
     }
-  }, [hWidth, hHeight])
+  }, [hSize])
 
   return (
     <section ref={ref} className="header">
