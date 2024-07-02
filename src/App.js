@@ -1,11 +1,11 @@
-import { useState, useRef, useLayoutEffect } from 'react'
+import { useRef, useLayoutEffect } from 'react'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from "react-router-dom";
-import { useBoardContext, BoardProvider } from './contexts/board.js'
 import { useAppGeometryContext, AppGeometryProvider } from './contexts/geometry.js'
 import { useSelectedPinContext, SelectedPinProvider } from './contexts/pins.js';
 import { useResizeObserver } from './hooks/resize.js';
 import { SelectedHeaderProvider } from './contexts/header.js'
 import { Board } from './components/board/Board.js'
+import { SettingsModal } from './components/board/Settings.js'
 import { DeviceTreeOutput } from './components/dts/DeviceTree.js'
 import { PrimaryButton } from './components/button'
 
@@ -14,11 +14,10 @@ import MindLogo from './assets/images/logos/mind_logo.svg';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { faRotateRight, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faRotateRight, faGlobe, faGear, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {useResizeObserver} from './hooks/resize.js';
 
-library.add(faLinkedin, faRotateRight, faGlobe);
+library.add(faLinkedin, faRotateRight, faGlobe, faGear, faClose);
 
 function ClearButton() {
   const { clear } = useSelectedPinContext();
@@ -31,9 +30,7 @@ function ClearButton() {
 }
 
 function Header() {
-  const { header: { size }, board: { metadata: { name } }, flipSide, onHeaderResize } = useAppGeometryContext();
-  const navigate = useNavigate()
-  const params = useParams()
+  const { header: { size }, board: { metadata: { name } }, onHeaderResize } = useAppGeometryContext();
 
   const ref = useRef()
   const hSize = useResizeObserver(ref)
@@ -50,6 +47,9 @@ function Header() {
         <ul>PinMux - {name}</ul>
         <ul>
           <ClearButton/>
+        </ul>
+        <ul>
+          <SettingsModal/>
         </ul>
       </li>
       <li className="brand">
