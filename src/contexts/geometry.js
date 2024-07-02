@@ -62,7 +62,8 @@ const _appGeometryDefault = {
     },
     overlay: {
       headers: []
-    }
+    },
+    variants: [],
   },
 }
 
@@ -156,14 +157,18 @@ function _getBoardImage (metadata, side) {
 
 function _getBoardVariant (board) {
   if (Array.isArray(board.metadata)) {
-    return board.metadata.map(({ id, name }) => ({
+    return board.metadata.map(({ id, name, image }) => ({
       id,
-      name
+      name,
+      image: typeof image === 'string' ?  image : image['front']
     }))
   } else {
     return {
       id: board.metadata.id,
-      name: board.metadata.name
+      name: board.metadata.name,
+      image: typeof board.metadata.image === 'string'
+        ? board.metadata.image
+        : board.metadata.image['front']
     }
   }
 }
