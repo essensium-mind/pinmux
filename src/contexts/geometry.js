@@ -152,7 +152,6 @@ function _getBoardImage (metadata, side) {
   return _boardHasSide(metadata, side)
     ? metadata.image[side]
     : metadata.image
-
 }
 
 function _getBoardVariant (board) {
@@ -213,15 +212,6 @@ function _boardOverlayHeaderGeometry (ref, definition, boardImg) {
 }
 
 function _boardOverlayHeadersGeometry (previousState, headersDefinitions, boardImg) {
-  // if (headersDefinitions.length === 0 || boardImg.loading) {
-    /**
-     * The tricky thing with the Header Geometry computation is that we must
-     * pass a default dumb state to start the computation of the sizing before
-     * placing it correctly
-     */
-    // return {}
-  // }
-
   return headersDefinitions.reduce((obj, x) => {
     if (previousState[x.name] && previousState[x.name].ref) {
       return {
@@ -374,7 +364,9 @@ function reducer(state, action) {
       }
     }
     case BOARD_CONTEXT_FLIP_BOARD: {
-      const newSide = state.board.side === 'front' ? 'back' : 'front'
+      const newSide = (action.data === 'front' || action.data === 'back')
+        ? action.data
+        : state.board.side === 'front' ? 'back' : 'front'
 
       if (_boardHasSide(state.board.metadata, newSide)) {
         return {
@@ -533,8 +525,9 @@ export function AppGeometryProvider ({ children }) {
   ), [])
 
   const flipSide = useMemo(() => (
-    () => dispatch({
+    (side) => dispatch({
       type: BOARD_CONTEXT_FLIP_BOARD,
+      data: side,
     })
   ), [])
 
