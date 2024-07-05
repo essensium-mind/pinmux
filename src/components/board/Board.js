@@ -3,6 +3,7 @@ import { useSelectedPinContext } from '../../contexts/pins.js';
 import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { useSelectedHeaderContext } from '../../contexts/header.js';
 import { useResizeObserver } from '../../hooks/resize.js';
+import { HeaderPin } from './HeaderPin.js'; 
 
 import './Board.css';
 
@@ -54,7 +55,7 @@ const Legend = ({ align, desc, id, maxHeight, shown, }) => (
   </td>
 );
 
-function Pin({ offset, innerSize, borderSize, pin, shown }) {
+function Pin({ offset, innerSize, borderSize, pin, shown, children }) {
   const { board: { definition: { pins: boardPinsDef } } } = useAppGeometryContext()
   const UnwrappedPin = ({ shown, id, justify }) => {
     const desc = (align) => (boardPinsDef[id] ? (
@@ -64,7 +65,9 @@ function Pin({ offset, innerSize, borderSize, pin, shown }) {
     return (
       <>
         { justify === "left" ? desc('right') : null }
-        <td style={{ height: innerSize + offset, width: innerSize, borderWidth: borderSize }} className="female-pin"/>
+        <td style={{ height: innerSize + offset + (2 * borderSize), width: innerSize + (2 * borderSize) }} className="pinmux-board-header-pin">
+          {children}
+        </td>
         { justify === "right" ? desc('left') : null }
       </>
     );
@@ -115,7 +118,7 @@ function Header({ header, pins, pos }) {
 
   // The following variable are computed based on a visual representation
   // I found pleasing and does not follow any guidelines.
-  const _borderPixelGrow = 1; // How much bigger in pixel the border is relative to innerSize
+  const _borderPixelGrow = header.style === 'male' ? 3 : 1; // How much bigger in pixel the border is relative to innerSize
   const _pinSize = (Math.floor(pins.pitch) - (2 * _borderPixelGrow)) / 3;
   const innerSize = Math.floor(_pinSize) + Math.round((_pinSize - Math.floor(_pinSize)) * 3);
   const borderSize = Math.floor(_pinSize + _borderPixelGrow);
@@ -162,7 +165,9 @@ function Header({ header, pins, pos }) {
       >
         <tbody>
           {header.contents.map((pin, index) => (
-            <Pin offset={offsetIndex[index]} innerSize={innerSize} borderSize={borderSize} key={`pin-header-line-${header.name}-${index}`} shown={shown} pin={pin} />
+            <Pin style={header.style} offset={offsetIndex[index]} innerSize={innerSize} borderSize={borderSize} key={`pin-header-line-${header.name}-${index}`} shown={shown} pin={pin}>
+              <HeaderPin style={{ display: 'block', height: innerSize + offsetIndex[index] + (2 * borderSize), width: innerSize + (2 * borderSize) }} type={header.style} />
+            </Pin>
           ))}
         </tbody>
       </table>
