@@ -74,13 +74,10 @@ h3 {
   font-size: x-small;
 }
 
-.female-pin {
+.pinmux-board-header-pin {
   z-index: 5;
   aspect-ratio: 1/1;
   display: inline-block;
-  border-style: ridge;
-  border-color: DimGrey;
-  background-color: Grey;
 }
 
 .pin-desc {
