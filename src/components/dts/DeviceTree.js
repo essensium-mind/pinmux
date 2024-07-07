@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { useAppGeometryContext } from '../../contexts/geometry'
 import { useSelectedPinContext } from '../../contexts/pins'
 import { splitProtocolIntoBusNumber } from '../../common'
@@ -5,42 +6,29 @@ import { splitProtocolIntoBusNumber } from '../../common'
 import './DeviceTree.css'
 
 export function DeviceTreeOutput() {
+  const params = useParams()
   const { board: { definition: { pins: boardPinsDef } } } = useAppGeometryContext()
   const { selectedPins } = useSelectedPinContext();
+
+  const { top_node, bus } = require(`../../assets/boards/${params.arch}/${params.vendor}/`).default
 
   const pinmux = (proto) => {
     const busses = splitProtocolIntoBusNumber(boardPinsDef, selectedPins, proto)
 
-    if (Object.keys(busses).length) {
-      let out = ''
+    return Object.entries(busses).flatMap(([k, pins]) => {
+      const ret = bus(proto, k, pins)
 
-      Object.keys(busses)
-        .forEach(bus => {
-          out += `\t${proto}${bus}_pins: pinmux_${proto}${bus}_pins {\n\t\tpinctrl-single,pins = <\n`
-
-          busses[bus].forEach(({address, mode, func, number }) => {
-            const direction = func === 'SCLK' ?
-              'PIN_OUTPUT_PULLUP'
-                : func === 'TXD' ? 
-              'PIN_OUTPUT_PULLDOWN'
-                : 
-              'PIN_INPUT_PULLUP'
-
-            out += `\t\t\tAM33XX_IOPAD(${address}, ${direction} | MUX_MODE${mode}); /* ${proto.toUpperCase()}${bus}_${func ? func.toUpperCase() : number} */\n`
-          })
-
-          out += `\t\t>;\n\t};\n\n`
-        });
-
-      return out
-    } else {
-      return ''
-    }
+      return ret.map(x => `\t${x}`)
+    }) || []
   }
+
+  const dts = top_node(
+    ['i2c', 'spi', 'uart', 'gpio'].flatMap(proto => pinmux(proto))
+  ).join('\n')
 
   return (
     <div className="device-tree">
-      <textarea className="device-tree" readOnly value={`&am33xx_pinmux {\n${pinmux('i2c')}${pinmux('spi')}${pinmux('uart')}${pinmux('gpio')}};\n`}/>
+      <textarea className="device-tree" readOnly value={dts}/>
     </div>
   )
 }
