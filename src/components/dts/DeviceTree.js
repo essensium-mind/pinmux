@@ -1,40 +1,22 @@
-import { useAppGeometryContext } from '../../contexts/geometry.js';
-import { useSelectedPinContext } from '../../contexts/pins.js';
-import './DeviceTree.css';
+import { useAppGeometryContext } from '../../contexts/geometry'
+import { useSelectedPinContext } from '../../contexts/pins'
+import { splitProtocolIntoBusNumber } from '../../common'
+
+import './DeviceTree.css'
 
 export function DeviceTreeOutput() {
   const { board: { definition: { pins: boardPinsDef } } } = useAppGeometryContext()
   const { selectedPins } = useSelectedPinContext();
 
-  const separateBusses = (pins, busName) => (
-    pins.reduce((prev, curr) => {
-      const currBus = selectedPins[curr][busName];
-      if (!prev[currBus]) {
-        prev[currBus] = [];
-      }
-      prev[currBus].push({
-        address: boardPinsDef[curr].address,
-        mode: selectedPins[curr].mode,
-        func: selectedPins[curr].function,
-        number: selectedPins[curr].number
-      })
-      return prev;
-    }, {})
-
-  );
-
-  const pinmux = (proto, busName = 'bus') => {
-    const busses = separateBusses(
-      Object.keys(selectedPins).filter(k => selectedPins[k] !== undefined && selectedPins[k].protocol === proto),
-      busName
-    );
+  const pinmux = (proto) => {
+    const busses = splitProtocolIntoBusNumber(boardPinsDef, selectedPins, proto)
 
     if (Object.keys(busses).length) {
       let out = ''
 
       Object.keys(busses)
         .forEach(bus => {
-          out += `\t${proto}${bus}_pins: pinmux_${proto}${bus}_pins {\n\t\tpinctrl-single,pins = <\n`;
+          out += `\t${proto}${bus}_pins: pinmux_${proto}${bus}_pins {\n\t\tpinctrl-single,pins = <\n`
 
           busses[bus].forEach(({address, mode, func, number }) => {
             const direction = func === 'SCLK' ?
@@ -44,13 +26,13 @@ export function DeviceTreeOutput() {
                 : 
               'PIN_INPUT_PULLUP'
 
-            out += `\t\t\tAM33XX_IOPAD(${address}, ${direction} | MUX_MODE${mode}); /* ${proto.toUpperCase()}${bus}_${func ? func.toUpperCase() : number} */\n`;
+            out += `\t\t\tAM33XX_IOPAD(${address}, ${direction} | MUX_MODE${mode}); /* ${proto.toUpperCase()}${bus}_${func ? func.toUpperCase() : number} */\n`
           })
 
-          out += `\t\t>;\n\t};\n\n`;
+          out += `\t\t>;\n\t};\n\n`
         });
 
-      return out;
+      return out
     } else {
       return ''
     }
@@ -58,7 +40,7 @@ export function DeviceTreeOutput() {
 
   return (
     <div className="device-tree">
-      <textarea className="device-tree" readOnly value={`&am33xx_pinmux {\n${pinmux('i2c')}${pinmux('spi')}${pinmux('uart')}${pinmux('gpio', 'port')}};\n`}/>
+      <textarea className="device-tree" readOnly value={`&am33xx_pinmux {\n${pinmux('i2c')}${pinmux('spi')}${pinmux('uart')}${pinmux('gpio')}};\n`}/>
     </div>
   )
 }
