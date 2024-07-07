@@ -1,0 +1,429 @@
+{
+  "metadata": [
+    {
+      "id": "rpi1_b",
+      "name": "Raspberry Pi 1 Model B Plus",
+      "image": {
+        "front": "rpi1_b.png",
+        "back": "rpi1_b_back.png"
+      }
+    },
+    {
+      "id": "rpi2_b",
+      "name": "Raspberry Pi 2 Model B",
+      "image": {
+        "front": "rpi2_b.png",
+        "back": "rpi2_b_back.png"
+      }
+    }
+
+  ],
+  "headers": [
+    {
+      "name": "J8",
+      "side": "front",
+      "style": "male",
+      "pitch": {
+        "rpi1_b": 34.5,
+        "rpi2_b": 35.35
+      },
+      "position": {
+        "rpi1_b": {
+          "x": 14,
+          "y": 394
+        },
+        "rpi2_b": {
+          "x": 6,
+          "y": 398
+        }
+      },
+      "contents": [
+        ["J8_40", "J8_39"],
+        ["J8_38", "J8_37"],
+        ["J8_36", "J8_35"],
+        ["J8_34", "J8_33"],
+        ["J8_32", "J8_31"],
+        ["J8_30", "J8_29"],
+        ["J8_28", "J8_27"],
+        ["J8_26", "J8_25"],
+        ["J8_24", "J8_23"],
+        ["J8_22", "J8_21"],
+        ["J8_20", "J8_19"],
+        ["J8_18", "J8_17"],
+        ["J8_16", "J8_15"],
+        ["J8_14", "J8_13"],
+        ["J8_12", "J8_11"],
+        ["J8_10", "J8_9"],
+        ["J8_8", "J8_7"],
+        ["J8_6", "J8_5"],
+        ["J8_4", "J8_3"],
+        ["J8_2", "J8_1"]
+      ]
+    }
+  ],
+  "pins": {
+    "J8_1": {
+      "name": "3V3",
+      "style": "VDD"
+    },
+    "J8_2": {
+      "name": "5V0",
+      "style": "VDD"
+    },
+    "J8_3": {
+      "address": 2,
+      "gpio": {
+        "port": 0,
+        "number": 2,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "i2c": {
+        "function": "SDA",
+        "bus": 1,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio", "i2c"]
+    },
+    "J8_4": {
+      "name": "5V0",
+      "style": "VDD"
+    },
+    "J8_5": {
+      "address": 3,
+      "gpio": {
+        "port": 0,
+        "number": 3,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "i2c": {
+        "function": "SCL",
+        "bus": 1,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio", "i2c"]
+    },
+    "J8_6": "GND",
+    "J8_7": {
+      "address": 4,
+      "gpio": {
+        "port": 0,
+        "number": 4,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_8": {
+      "address": 14,
+      "gpio": {
+        "port": 0,
+        "number": 14,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "uart": {
+        "function": "TXD",
+        "bus": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio", "uart"]
+    },
+    "J8_9": "GND",
+    "J8_10": {
+      "address": 15,
+      "gpio": {
+        "port": 0,
+        "number": 15,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "uart": {
+        "function": "RXD",
+        "bus": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio", "uart"]
+    },
+    "J8_11": {
+      "address": 17,
+      "gpio": {
+        "port": 0,
+        "number": 17,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "uart": {
+        "function": "RTS",
+        "bus": 0,
+        "mode": "BCM2835_FSEL_ALT3"
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 1,
+        "number": 1,
+        "mode": "BCM2835_FSEL_ALT4"
+      },
+      "tags": ["gpio", "uart", "spi"]
+    },
+    "J8_12": {
+      "address": 18,
+      "gpio": {
+        "port": 0,
+        "number": 18,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 1,
+        "number": 0,
+        "mode": "BCM2835_FSEL_ALT4"
+      },
+      "tags": ["gpio", "spi"]
+    },
+    "J8_13": {
+      "address": 27,
+      "gpio": {
+        "port": 0,
+        "number": 27,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_14": "GND",
+    "J8_15": {
+      "address": 22,
+      "gpio": {
+        "port": 0,
+        "number": 22,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_16": {
+      "address": 23,
+      "gpio": {
+        "port": 0,
+        "number": 23,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_17": {
+      "name": "3V3",
+      "style": "VDD"
+    },
+    "J8_18": {
+      "address": 24,
+      "gpio": {
+        "port": 0,
+        "number": 24,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_19": {
+      "address": 10,
+      "gpio": {
+        "port": 0,
+        "number": 10,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "spi": {
+        "function": "MOSI",
+        "bus": 0,
+        "number": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+       "tags": ["gpio", "spi"]
+    },
+    "J8_20": "GND",
+    "J8_21": {
+      "address": 9,
+      "gpio": {
+        "port": 0,
+        "number": 9,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "spi": {
+        "function": "MISO",
+        "bus": 0,
+        "number": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+       "tags": ["gpio", "spi"]
+    },
+    "J8_22": {
+      "address": 25,
+      "gpio": {
+        "port": 0,
+        "number": 25,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_23": {
+      "address": 11,
+      "gpio": {
+        "port": 0,
+        "number": 11,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "spi": {
+        "function": "SCLK",
+        "bus": 0,
+        "number": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+       "tags": ["gpio", "spi"]
+    },
+    "J8_24": {
+      "address": 8,
+      "gpio": {
+        "port": 0,
+        "number": 8,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 0,
+        "number": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+       "tags": ["gpio", "spi"]
+    },
+    "J8_25": "GND",
+    "J8_26": {
+      "address": 7,
+      "gpio": {
+        "port": 0,
+        "number": 7,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "spi": {
+        "function": "CS",
+        "bus": 0,
+        "number": 1,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+       "tags": ["gpio", "spi"]
+    },
+    "J8_27": {
+      "address": 0,
+      "gpio": {
+        "port": 0,
+        "number": 0,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "i2c": {
+        "function": "SDA",
+        "bus": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio", "i2c"]
+    },
+    "J8_28": {
+      "address": 1,
+      "gpio": {
+        "port": 0,
+        "number": 1,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "i2c": {
+        "function": "SCL",
+        "bus": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio", "i2c"]
+    },
+    "J8_29": {
+      "address": 5,
+      "gpio": {
+        "port": 0,
+        "number": 5,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_30": "GND",
+    "J8_31": {
+      "address": 6,
+      "gpio": {
+        "port": 0,
+        "number": 6,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+     "J8_32": {
+      "address": 12,
+      "gpio": {
+        "port": 0,
+        "number": 12,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "pwm": {
+        "port": 0,
+        "number": 0,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_33": {
+      "address": 13,
+      "gpio": {
+        "port": 0,
+        "number": 13,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "pwm": {
+        "port": 0,
+        "number": 1,
+        "mode": "BCM2835_FSEL_ALT0"
+      },
+      "tags": ["gpio"]
+    }, 
+    "J8_34": "GND",
+    "J8_35": {
+      "address": 19,
+      "gpio": {
+        "port": 0,
+        "number": 19,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_36": {
+      "address": 16,
+      "gpio": {
+        "port": 0,
+        "number": 16,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_37": {
+      "address": 26,
+      "gpio": {
+        "port": 0,
+        "number": 26,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_38": {
+      "address": 20,
+      "gpio": {
+        "port": 0,
+        "number": 20,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    },
+    "J8_39": "GND",
+    "J8_40": {
+      "address": 21,
+      "gpio": {
+        "port": 0,
+        "number": 21,
+        "mode": "BCM2835_FSEL_GPIO_OUT"
+      },
+      "tags": ["gpio"]
+    }
+  }
+}
