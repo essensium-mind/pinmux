@@ -3,9 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppGeometryContext } from '../../contexts/geometry.js'
 import { Modal, ModalBody, ModalHeader } from '../modal'
+import { CardContainer, Card, CardBody, CardImg } from '../card'
 import { PrimaryButton } from '../button'
-
-import './Settings.css'
 
 function boardHasSideOption (image) {
   return typeof image === "object"
@@ -13,37 +12,37 @@ function boardHasSideOption (image) {
 
 function SettingsBoardSide({ handleClick, current, image }) {
   return (
-    <div className="pinmux-settings-variant-container">
-      <div className={`pinmux-settings-variant-card ${current === 'front' ? 'pinmux-settings-variant-card-selected' : ''}`} onClick={() => handleClick('front')}>
-        <img src={require(`../../assets/images/${image['front']}`)}/>
-        <p>
+    <CardContainer>
+      <Card selected={current === 'front'} onSelect={() => handleClick('front')}>
+        <CardImg src={require(`../../assets/images/${image['front']}`)}/>
+        <CardBody>
           Front
-        </p>
-      </div>
-      <div className={`pinmux-settings-variant-card ${current === 'back' ? 'pinmux-settings-variant-card-selected' : ''}`} onClick={() => handleClick('back')}>
-        <img src={require(`../../assets/images/${image['back']}`)}/>
-        <p>
+        </CardBody>
+      </Card>
+      <Card selected={current === 'back'} onSelect={() => handleClick('back')}>
+        <CardImg src={require(`../../assets/images/${image['back']}`)}/>
+        <CardBody>
           Back
-        </p>
-      </div>
-    </div>
+        </CardBody>
+      </Card>
+    </CardContainer>
   )
 }
 
 function SettingsBoardVariant({ handleClick, current, variants }) {
   return (
-    <div className="pinmux-settings-variant-container">
+    <CardContainer>
       {variants.map(v => {
         return (
-          <div className={`pinmux-settings-variant-card ${current === v.id ? 'pinmux-settings-variant-card-selected' : ''}`} onClick={() => handleClick(v)} key={v.id}>
-            <img src={require(`../../assets/images/${v.image}`)}/>
-            <p>
+          <Card selected={current === v.id} onSelect={() => handleClick(v)} key={v.id}>
+            <CardImg src={require(`../../assets/images/${v.image}`)}/>
+            <CardBody>
               {v.name}
-            </p>
-          </div>
+            </CardBody>
+          </Card>
         )
       })}
-    </div>
+    </CardContainer>
   )
 }
 

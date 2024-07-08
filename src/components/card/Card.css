@@ -1,11 +1,11 @@
-.pinmux-settings-variant-container {
+.pinmux-card-container {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   flex-wrap: wrap;
 }
 
-.pinmux-settings-variant-card {
+.pinmux-card {
   flex: 0 1 24%;
   border-style: solid;
   border-width: 1px;
@@ -15,23 +15,23 @@
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
-.pinmux-settings-variant-card-selected {
+.pinmux-card-selected {
   border-color: #f9ce6e;
   border-width: 2px;
   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
 }
 
-.pinmux-settings-variant-card:hover {
+.pinmux-card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   text-decoration: underline;
 }
 
-.pinmux-settings-variant-card img {
+.pinmux-card img {
   padding: 1em 2em;
   align-content: center;
   height: 16em;
 }
 
-.pinmux-settings-variant-card p {
+.pinmux-card p {
   padding: 1em;
 }
