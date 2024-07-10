@@ -16,7 +16,7 @@ export function Card ({ children, selected, onSelect, ...props }) {
   }
 
   return (
-    <div className={`pinmux-card ${selected ? 'pinmux-settings-variant-card-selected' : ''}`} onClick={() => handleClick()} {...props}>
+    <div className={`pinmux-card ${selected ? 'pinmux-card-selected' : ''}`} onClick={() => handleClick()} {...props}>
         {children}
     </div>
   )
