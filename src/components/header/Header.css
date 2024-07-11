@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@100..800&display=swap');
+
+.pinmux-header {
+  font-family: "Martian Mono", monospace;
+  color: white;
+  background-color: #1f1fa3;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.pinmux-header ul {
+  vertical-align: middle;
+  display: inline-block;
+  margin: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.pinmux-header li {
+  list-style-type: none;
+}
+
+.pinmux-header .pinmux-header-brand {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+}
+
+.pinmux-header .pinmux-header-brand a {
+  text-decoration: none;
+  color: white;
+  :hover {
+    color: orange;
+  }
+}
+
+
