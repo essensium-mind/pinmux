@@ -15,6 +15,28 @@
         "front": "rpi2_b.png",
         "back": "rpi2_b_back.png"
       }
+    },
+    {
+      "id": "rpi3_a",
+      "name": "Raspberry Pi 3 Model A",
+      "image": {
+        "front": "rpi3_a.png"
+      }
+    },
+    {
+      "id": "rpi3_b",
+      "name": "Raspberry Pi 3 Model B",
+      "image": {
+        "front": "rpi3_b.png"
+      }
+    },
+    {
+      "id": "rpi4_b",
+      "name": "Raspberry Pi 4 Model B",
+      "image": {
+        "front": "rpi4_b.png",
+        "back": "rpi4_b_back.png"
+      }
     }
 
   ],
@@ -25,7 +47,10 @@
       "style": "male",
       "pitch": {
         "rpi1_b": 34.5,
-        "rpi2_b": 35.35
+        "rpi2_b": 35.35,
+        "rpi3_a": 72.55,
+        "rpi3_b": 56.8,
+        "rpi4_b": 54.35
       },
       "position": {
         "rpi1_b": {
@@ -35,6 +60,18 @@
         "rpi2_b": {
           "x": 6,
           "y": 398
+        },
+        "rpi3_a": {
+          "x": 18,
+          "y": 296 
+        },
+        "rpi3_b": {
+          "x": 20,
+          "y": 669 
+        },
+        "rpi4_b": {
+          "x": 21,
+          "y": 649 
         }
       },
       "contents": [
@@ -230,7 +267,7 @@
         "number": 0,
         "mode": "BCM2835_FSEL_ALT0"
       },
-       "tags": ["gpio", "spi"]
+      "tags": ["gpio", "spi"]
     },
     "J8_20": "GND",
     "J8_21": {
@@ -246,7 +283,7 @@
         "number": 0,
         "mode": "BCM2835_FSEL_ALT0"
       },
-       "tags": ["gpio", "spi"]
+      "tags": ["gpio", "spi"]
     },
     "J8_22": {
       "address": 25,
@@ -270,7 +307,7 @@
         "number": 0,
         "mode": "BCM2835_FSEL_ALT0"
       },
-       "tags": ["gpio", "spi"]
+      "tags": ["gpio", "spi"]
     },
     "J8_24": {
       "address": 8,
@@ -285,7 +322,7 @@
         "number": 0,
         "mode": "BCM2835_FSEL_ALT0"
       },
-       "tags": ["gpio", "spi"]
+      "tags": ["gpio", "spi"]
     },
     "J8_25": "GND",
     "J8_26": {
@@ -301,7 +338,7 @@
         "number": 1,
         "mode": "BCM2835_FSEL_ALT0"
       },
-       "tags": ["gpio", "spi"]
+      "tags": ["gpio", "spi"]
     },
     "J8_27": {
       "address": 0,
@@ -350,7 +387,7 @@
       },
       "tags": ["gpio"]
     },
-     "J8_32": {
+    "J8_32": {
       "address": 12,
       "gpio": {
         "port": 0,
@@ -377,7 +414,7 @@
         "mode": "BCM2835_FSEL_ALT0"
       },
       "tags": ["gpio"]
-    }, 
+    },
     "J8_34": "GND",
     "J8_35": {
       "address": 19,
