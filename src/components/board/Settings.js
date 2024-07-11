@@ -7,7 +7,7 @@ import { CardContainer, Card, CardBody, CardImg } from '../card'
 import { PrimaryButton } from '../button'
 
 function boardHasSideOption (image) {
-  return typeof image === "object"
+  return typeof image === "object" && image['front'] && image['back']
 }
 
 function SettingsBoardSide({ handleClick, current, image }) {
