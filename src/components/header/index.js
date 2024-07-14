@@ -40,7 +40,7 @@ export function Header() {
       <li>
         <ul><img height="80" src={MindLogo} alt='mind-logo'/></ul>
         <ul>PinMux{title && ` - ${title}`}</ul>
-        {contents.map((x, i) => (
+        {contents && contents.map((x, i) => (
           <ul key={i}>
             {x} 
           </ul>
